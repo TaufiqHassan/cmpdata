@@ -1,5 +1,5 @@
-pandas
 xesmf
 xarray
-setuptools
 dask
+pandas
+setuptools
