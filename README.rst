@@ -15,10 +15,10 @@ Access Cmip6
    :target: https://doi.org/10.5281/zenodo.3723878
 
 
-``acccmip6`` package can access CMIP6 database in real-time.
+``cdata`` package can handle and analyze raw CMIP6 data.
 
-* GitHub repo: https://github.com/TaufiqHassan/acccmip6
-* Documentation: https://acccmip6.readthedocs.org.
+* GitHub repo: https://github.com/TaufiqHassan/cdata
+* Documentation: 
 
 Features
 --------

@@ -6,8 +6,8 @@ Created on Mon Sep  7 14:40:38 2020
 """
 import argparse
 
-from c6Data import get_data
-from file_system_util import _check_list
+from cdata.c6Data import get_data
+from cdata.file_system_util import _check_list
 
 import warnings
 warnings.filterwarnings("ignore")
