@@ -14,8 +14,8 @@ requirements = [
     'pandas',
     'xesmf',
     'xarray',
+    'dask',
     'setuptools',
-    'xlrd',
 ]
 
 test_requirements = [

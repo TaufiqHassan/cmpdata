@@ -2,4 +2,4 @@ pandas
 xesmf
 xarray
 setuptools
-xlrd
+dask
