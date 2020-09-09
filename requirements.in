@@ -1,5 +1,0 @@
-xarray==0.15.1
-esmpy==8.0.0
-xesmf==0.3.0
-numpy==1.18.4
-pandas==1.0.3
