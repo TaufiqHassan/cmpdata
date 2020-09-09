@@ -26,6 +26,5 @@ install:
 - conda install -c conda-forge esmpy xarray scipy dask netCDF4
 - pip install xesmf
 
-script: 
-- py.test
+script: python setup.py test 
 

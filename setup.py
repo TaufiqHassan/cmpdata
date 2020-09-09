@@ -12,6 +12,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as readme_file:
 
 requirements = [
     'setuptools',
+    'pandas',
 ]
 
 test_requirements = [
