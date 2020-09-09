@@ -43,7 +43,7 @@ install:
    - conda install -c conda-forge esmpy xarray scipy dask netCDF4
 
   # You can also install some dependencies with pip if not available in conda
-
+   - pip install -r requirements.in
 
 script:
 
