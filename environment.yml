@@ -15,12 +15,12 @@ dependencies:
   - dask=2.25.0=py_0
   - dask-core=2.25.0=py_0
   - distributed=2.25.0=py37hc8dfbb8_0
-  - esmf=8.0.1=nompi_h6f536e7_0
-  - esmpy=8.0.1=nompi_py37h777d1d2_0
+  - esmf=8.0.1=mpi_mpich_h31c0ad6_100
+  - esmpy=8.0.1=mpi_mpich_py37hef66020_100
   - freetype=2.10.2=h8da9a1a_0
   - fsspec=0.8.0=py_0
   - hdf4=4.2.13=h84186c3_1003
-  - hdf5=1.10.6=nompi_haae91d6_101
+  - hdf5=1.10.6=mpi_mpich_hbdba543_1
   - heapdict=1.0.1=py_0
   - jinja2=2.11.2=pyh9f0ad1d_0
   - jpeg=9d=h0b31af3_0
@@ -33,10 +33,9 @@ dependencies:
   - libedit=3.1.20191231=h0678c8f_2
   - libev=4.33=haf1e3a3_1
   - libffi=3.2.1=hb1e8313_1007
-  - libgfortran=4.0.0=3
-  - libgfortran4=7.5.0=h1565451_3
+  - libgfortran=4.0.0=2
   - liblapack=3.8.0=17_openblas
-  - libnetcdf=4.7.4=nompi_hc5b2cf3_105
+  - libnetcdf=4.7.4=mpi_mpich_hcb84e81_5
   - libnghttp2=1.41.0=h7580e61_2
   - libopenblas=0.3.10=openmp_h63d9170_4
   - libpng=1.6.37=hb0a8c7a_2
@@ -47,9 +46,12 @@ dependencies:
   - locket=0.2.0=py_2
   - lz4-c=1.9.2=hb1e8313_3
   - markupsafe=1.1.1=py37h9bfed18_1
+  - mpi=1.0=mpich
+  - mpi4py=3.0.3=py37h88507a1_1
+  - mpich=3.3.2=hc856adb_0
   - msgpack-python=1.0.0=py37ha1cc60f_1
   - ncurses=6.2=hb1e8313_1
-  - netcdf-fortran=4.5.3=nompi_hcfc364a_100
+  - netcdf-fortran=4.5.3=mpi_mpich_h4b5228a_0
   - netcdf4=1.5.4=nompi_py37h08081e3_102
   - numpy=1.19.1=py37h1efc2f6_2
   - olefile=0.46=py_0
@@ -79,20 +81,10 @@ dependencies:
   - typing_extensions=3.7.4.2=py_0
   - wheel=0.35.1=pyh9f0ad1d_0
   - xarray=0.16.0=py_0
-  - xesmf=0.3.0=py_0
   - xz=5.2.5=haf1e3a3_1
   - yaml=0.2.5=haf1e3a3_0
   - zict=2.0.0=py_0
   - zlib=1.2.11=h7795811_1009
   - zstd=1.4.5=h289c70a_2
   - pip:
-    - appdirs==1.4.4
-    - distlib==0.3.1
-    - filelock==3.0.12
-    - importlib-metadata==1.7.0
-    - pluggy==0.13.1
-    - py==1.9.0
-    - toml==0.10.1
-    - tox==3.20.0
-    - virtualenv==20.0.31
-    - zipp==3.1.0
+    - xesmf==0.3.0
