@@ -5,7 +5,7 @@ Created on Wed Aug 26 17:57:21 2020
 @author: Taufiq
 """
 
-from cdata.file_system_util import search_dir, get_means
+from cmdata.file_system_util import search_dir, get_means
 
 class get_data(object): 
     
