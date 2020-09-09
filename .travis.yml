@@ -28,7 +28,4 @@ install:
 - conda install -c conda-forge xesmf
 - conda install -c conda-forge dask netCDF4
 
-script: 
-- python --version
-- py.test
-
+script: python setup.py test
