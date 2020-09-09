@@ -1,9 +1,9 @@
 ===============================
-Access Cmip6
+Handle CMIP6
 ===============================
 
-.. image:: https://img.shields.io/travis/TaufiqHassan/acccmip6.svg
-        :target: https://travis-ci.org/TaufiqHassan/acccmip6
+.. image:: https://img.shields.io/travis/TaufiqHassan/cdata.svg
+        :target: https://travis-ci.org/TaufiqHassan/cdata
 
 .. image:: https://img.shields.io/pypi/v/acccmip6.svg
         :target: https://pypi.python.org/pypi/acccmip6
