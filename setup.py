@@ -18,6 +18,9 @@ requirements = [
     'setuptools',
 ]
 
+test_requirements = [
+    'pytest',
+]
 
 setup(
     name='cdata',
