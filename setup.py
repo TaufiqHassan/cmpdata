@@ -11,8 +11,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as readme_file:
     readme = readme_file.read()
 
 requirements = [
-    'pandas',
-    'scipy',
+    'pytest',
     'setuptools',
 ]
 
@@ -22,7 +21,7 @@ test_requirements = [
 
 setup(
     name='cmdata',
-    version='1.0.5',
+    version='1.0.6',
     description="Package for handling CMIP6 data",
     long_description=readme,
     author="Taufiq Hassan",

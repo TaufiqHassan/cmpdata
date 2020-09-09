@@ -23,8 +23,10 @@ before_install:
 install:
 - conda create -n xesmf_env python=$TRAVIS_PYTHON_VERSION
 - source activate xesmf_env
-- conda install -c conda-forge esmpy xarray scipy dask netCDF4
-- pip install xesmf
+- conda install -c conda-forge xesmf
+- conda install -c conda-forge dask netCDF4
+- conda install -c conda-forge xesmf esmpy=7.1.0
 
-script: python setup.py test 
+script: 
+- py.test
 
