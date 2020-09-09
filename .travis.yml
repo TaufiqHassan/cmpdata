@@ -19,11 +19,12 @@ before_install:
 - conda info -a
 - echo "Python version var"
 - echo $TRAVIS_PYTHON_VERSION
-- conda env create -n testenv -f "environment_"$TRAVIS_PYTHON_VERSION".yml"
-- source activate testenv
+#- conda create -n testenv python=$TRAVIS_PYTHON_VERSION
+#- source activate testenv
 
 install:
-
+- conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
+- source activate test
 - conda install -c conda-forge esmpy xarray scipy dask netCDF4
 - conda install -c conda-forge xesmf
 
