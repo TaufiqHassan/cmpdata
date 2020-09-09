@@ -1,51 +1,31 @@
 language: python
+
 python:
-  - "3.5"
-  - "3.6"
-  - "3.7"
-matrix:
-  include:
-
-    # Here you can add or remove specific builds, and Python versions. You
-    # should currently be able to use Python 2.6, 2.7, or 3.3 or later. The
-    # NUMPY and SCIPY versions are set here as an example, but you can
-    # add/remove environment variables, and use them below during the install.
-
-    - python: 3.5
-
-    - python: 3.6
-
-    - python: 3.7
+  - 3.5
+  - 3.6
+  - 3.7
 
 before_install:
 
   # Here we just install Miniconda, which you shouldn't have to change.
 
-  - "wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh"
-  - "chmod +x miniconda.sh"
-  - "./miniconda.sh -b"
-  - "export PATH=/home/travis/miniconda/bin:$PATH"
-  - "conda update --yes conda"
+- export MINICONDA=$HOME/miniconda
+- export PATH="$MINICONDA/bin:$PATH"
+- hash -r
+- wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+- bash miniconda.sh -b -f -p $MINICONDA
+- conda config --set always_yes yes
+- conda update conda
+- conda info -a
+- echo "Python version var"
+- echo $TRAVIS_PYTHON_VERSION
+- conda env create -n testenv -f "environment_"$TRAVIS_PYTHON_VERSION".yml"
+- source activate testenv
 
 install:
 
-  # We just set up a conda environment with the right Python version. This
-  # should not need changing.
-
-  - "conda create --yes -n test python=$TRAVIS_PYTHON_VERSION"
-  - "source activate test"
-
-  # Below, include the dependencies you want to install with conda, optionally
-  # specifying versions used in the matrix above. If you split this into
-  # multiple conda install commands, you should always include numpy=$NUMPY as
-  # the first package to install (for every conda install command) otherwise
-  # numpy may be automatically upgraded.
-
-  #- conda install --yes numpy=$NUMPY scipy=$SCIPY astropy matplotlib pytest pip
-
-   - "conda install -c conda-forge esmpy xarray scipy dask netCDF4"
-
-  # You can also install some dependencies with pip if not available in conda
-   - "pip install -r requirements.txt"
+- conda install -c conda-forge esmpy xarray scipy dask netCDF4
+- conda install -c conda-forge xesmf
 
 script: python setup.py test
+
