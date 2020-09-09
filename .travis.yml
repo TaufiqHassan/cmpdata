@@ -1,10 +1,8 @@
 language: python
 
-python:
-  - "3.6"
-  - "3.7"
-  
-matrix:
+jobs:
+    allow_failures:
+        - os: osx
     include:
         # Use generic language for osx
         - os: osx
