@@ -2,11 +2,11 @@
 Handle CMIP6
 ===============================
 
-.. image:: https://img.shields.io/travis/TaufiqHassan/cdata.svg
-        :target: https://travis-ci.org/TaufiqHassan/cdata
+.. image:: https://img.shields.io/travis/TaufiqHassan/cmdata.svg
+        :target: https://travis-ci.org/TaufiqHassan/cmdata
 
-.. image:: https://img.shields.io/pypi/v/acccmip6.svg
-        :target: https://pypi.python.org/pypi/acccmip6
+.. image:: https://img.shields.io/pypi/v/cmdata.svg
+        :target: https://pypi.python.org/pypi/cmdata
 
 .. image:: https://readthedocs.org/projects/acccmip6/badge
         :target: https://acccmip6.readthedocs.org
@@ -15,9 +15,9 @@ Handle CMIP6
    :target: https://doi.org/10.5281/zenodo.3723878
 
 
-``cdata`` package can handle and analyze raw CMIP6 data.
+``cmdata`` package can handle and analyze raw CMIP6 data.
 
-* GitHub repo: https://github.com/TaufiqHassan/cdata
+* GitHub repo: https://github.com/TaufiqHassan/cmdata
 * Documentation: 
 
 Features
