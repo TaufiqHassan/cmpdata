@@ -20,7 +20,6 @@ requirements = [
 
 test_requirements = [
     'pytest',
-    'requests',
 ]
 
 setup(
@@ -32,9 +31,6 @@ setup(
     author_email='taufiq.hassanmozumder@email.ucr.edu',
     url='https://github.com/TaufiqHassan/cdata',
     packages=find_packages(exclude=['docs', 'tests']),
-#    package_data = {
-#            'utilities':['data/*.xlsx'],
-#            },
     entry_points={
         'console_scripts':[
             'cdata=cdata.cli:main',
