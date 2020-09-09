@@ -24,7 +24,7 @@ before_install:
 
 install:
 - conda create -n xesmf_env python=$TRAVIS_PYTHON_VERSION
-- source activate test
+- source activate xesmf_env
 - conda install -c conda-forge xesmf
 - conda install -c conda-forge dask netCDF4
 
