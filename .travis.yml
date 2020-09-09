@@ -40,12 +40,10 @@ install:
 
   #- conda install --yes numpy=$NUMPY scipy=$SCIPY astropy matplotlib pytest pip
 
-   - conda install -c conda-forge dask netCDF4
-   - conda install -c conda-forge xesmf
+   - conda install -c conda-forge esmpy xarray scipy dask netCDF4
 
   # You can also install some dependencies with pip if not available in conda
 
-   - pip install pandas
 
 script:
 
