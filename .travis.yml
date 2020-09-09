@@ -3,7 +3,6 @@ language: python
 python:
   - 3.6
   - 3.7
-  - 3.8
 
 before_install:
 
@@ -27,6 +26,5 @@ install:
 - conda install -c conda-forge dask netCDF4
 - conda install -c conda-forge xesmf esmpy=7.1.0
 
-script: 
-- py.test
+script: python setup.py test 
 
