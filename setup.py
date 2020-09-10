@@ -21,7 +21,7 @@ test_requirements = [
 
 setup(
     name='cmdata',
-    version='1.0.9',
+    version='2.0.0',
     description="Package for handling CMIP6 data",
     long_description=readme,
     author="Taufiq Hassan",
