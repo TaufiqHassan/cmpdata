@@ -21,7 +21,7 @@ test_requirements = [
 
 setup(
     name='cmdata',
-    version='2.0.1',
+    version='2.0.2',
     description="Package for handling CMIP6 data",
     long_description=readme,
     author="Taufiq Hassan",
@@ -39,7 +39,6 @@ setup(
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
     test_suite='tests',
