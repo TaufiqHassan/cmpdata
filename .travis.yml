@@ -31,7 +31,7 @@ before_install:
 install:
 - conda install -c conda-forge xesmf
 - conda install -c conda-forge dask netCDF4
-#- conda install -c conda-forge xesmf esmpy=7.1.0
+- conda install -c conda-forge xesmf esmpy=7.1.0
 #- conda install --yes --file requirements.txt
 
 script: python setup.py test
