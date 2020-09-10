@@ -16,6 +16,7 @@ requirements = [
     'xarray',
     'dask',
     'scipy',
+    'xesmf',
     'pytest',
     'setuptools',
 ]
@@ -26,7 +27,7 @@ test_requirements = [
 
 setup(
     name='cmdata',
-    version='2.0.3',
+    version='2.0.4',
     description="Package for handling CMIP6 data",
     long_description=readme,
     author="Taufiq Hassan",
