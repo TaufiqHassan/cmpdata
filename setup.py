@@ -11,11 +11,6 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as readme_file:
     readme = readme_file.read()
 
 requirements = [
-    'numpy',
-    'pandas',
-    'xarray',
-    'dask',
-    'scipy',
     'pytest',
     'setuptools',
 ]

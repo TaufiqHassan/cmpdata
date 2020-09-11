@@ -22,13 +22,15 @@ before_install:
 - echo "Python version var"
 - echo $TRAVIS_PYTHON_VERSION
 - echo $MINICONDAVERSION
-- conda create -n test python=$TRAVIS_PYTHON_VERSION
-- source activate test
 
 install:
-- conda install -c conda-forge xesmf
-- conda install -c conda-forge dask netCDF4
-- conda install -c conda-forge xesmf esmpy=7.1.0
+- conda env create -f environment.yml
+#- conda create -n cmdata python=$TRAVIS_PYTHON_VERSION
+- source activate cmdata
+#- conda install -c conda-forge xesmf
+#- conda install -c conda-forge dask netCDF4
+#- conda install -c conda-forge xesmf esmpy=7.1.0
+#- pip install pytest
 
 script: pytest
 
