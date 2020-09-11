@@ -5,19 +5,16 @@ python:
  - 3.6
  - 3.7
 
-os:
- - osx
- - linux
-#jobs:
-#    include:
-#        # Use generic language for osx
-#        - os: osx
-#          language: generic
-#          env: TOXENV=py36
-#      
-#        - os: osx
-#          language: generic
-#          env: TOXENV=py37
+matrix:
+    include:
+        # Use generic language for osx
+        - os: osx
+          language: generic
+          env: TOXENV=py36
+      
+        - os: osx
+          language: generic
+          env: TOXENV=py37
 
 before_install:
  - CI/before_install.sh
