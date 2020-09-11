@@ -16,7 +16,6 @@ requirements = [
     'xarray',
     'dask',
     'scipy',
-    'xesmf',
     'pytest',
     'setuptools',
 ]
