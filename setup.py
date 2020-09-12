@@ -11,6 +11,10 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as readme_file:
     readme = readme_file.read()
 
 requirements = [
+    'xarray',
+    'pandas',
+    'dask',
+    'xesmf',
     'pytest',
     'setuptools',
 ]
@@ -21,7 +25,7 @@ test_requirements = [
 
 setup(
     name='cmdata',
-    version='2.0.4',
+    version='1.0.1',
     description="Package for handling CMIP6 data",
     long_description=readme,
     author="Taufiq Hassan",
@@ -39,6 +43,7 @@ setup(
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
     test_suite='tests',
