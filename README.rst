@@ -31,10 +31,10 @@ Installation
     ``conda install -c thassan cmpdata``
 
 For ``pip`` installation, you have to first install dependencies:
-
-    ``conda install -c conda-forge dask netCDF4
+.. code-block ::
+    conda install -c conda-forge dask netCDF4
     conda install -c conda-forge xesmf esmpy=7.1.0
-    pip install cmpdata``
+    pip install cmpdata
 
 Alternatively, use the yml files in ci directory to create appropriate environement:
 
