@@ -14,6 +14,7 @@ requirements = [
     'xarray',
     'pandas',
     'dask',
+    'netCDF4',
     'xesmf',
     'pytest',
     'setuptools',
@@ -25,7 +26,7 @@ test_requirements = [
 
 setup(
     name='cmpdata',
-    version='1.0.3',
+    version='1.0.4',
     description="Package for handling CMIP6 data",
     long_description=readme,
     author="Taufiq Hassan",
