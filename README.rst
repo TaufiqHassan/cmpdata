@@ -26,17 +26,17 @@ Features
 Installation
 ------------
 
-``cmpdata`` is installable using ``conda`` or ``pip``. Conda installation is simple as:
+``cmpdata`` is installable using ``conda`` or ``pip``. Conda installation is simple as
  ::
     conda install -c thassan cmpdata
 
-For ``pip`` installation, you have to first install dependencies:
+For ``pip`` installation, you have to first install dependencies
  ::
     conda install -c conda-forge dask netCDF4
     conda install -c conda-forge xesmf esmpy=7.1.0
     pip install cmpdata
 
-Alternatively, use the yml files in ci directory to create appropriate environement:
+Alternatively, use the yml files in ci directory to create appropriate environement
  ::
     conda env create --file environment-py37.yml
     source activate cmdata
