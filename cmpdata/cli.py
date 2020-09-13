@@ -6,8 +6,8 @@ Created on Mon Sep  7 14:40:38 2020
 """
 import argparse
 
-from cmdata.c6Data import get_data
-from cmdata.file_system_util import _check_list
+from cmpdata.c6Data import get_data
+from cmpdata.file_system_util import _check_list
 
 import warnings
 warnings.filterwarnings("ignore")

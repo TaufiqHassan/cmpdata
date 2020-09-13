@@ -13,7 +13,7 @@ from pathlib import Path
 import xesmf as xe
 import numpy as np
 
-from cmdata.c6Stats import data_resample
+from cmpdata.c6Stats import data_resample
 
 class color:
    PURPLE = '\033[35m'

@@ -24,17 +24,17 @@ test_requirements = [
 ]
 
 setup(
-    name='cmdata',
+    name='cmpdata',
     version='1.0.1',
     description="Package for handling CMIP6 data",
     long_description=readme,
     author="Taufiq Hassan",
     author_email='taufiq.hassanmozumder@email.ucr.edu',
-    url='https://github.com/TaufiqHassan/cmdata',
+    url='https://github.com/TaufiqHassan/cmpdata',
     packages=find_packages(exclude=['docs', 'tests']),
     entry_points={
         'console_scripts':[
-            'cmdata=cmdata.cli:main',
+            'cmpdata=cmpdata.cli:main',
             ],
         },
     include_package_data=True,
