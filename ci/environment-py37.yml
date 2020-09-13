@@ -1,0 +1,13 @@
+name: cmpdata
+channels:
+          - conda-forge
+dependencies:
+          - python=3.7
+          - xesmf
+          - esmpy=7.1.0
+          - netCDF4
+          - xarray
+          - dask
+          - numpy
+          - scipy
+          - pytest

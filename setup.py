@@ -16,7 +16,7 @@ requirements = [
     'dask',
     'netCDF4',
     'xesmf',
-    'esmpy=7.1.0'
+    'esmpy'
     'pytest',
     'setuptools',
 ]
