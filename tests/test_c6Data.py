@@ -1,4 +1,4 @@
-from cmdata.c6Data import get_data
+from cmpdata.c6Data import get_data
 
 def setup_module(module):
     global d
