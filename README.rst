@@ -28,8 +28,8 @@ Installation
 
 ``cmpdata`` is installable using ``conda`` or ``pip``. Conda installation is simple as:
 
-.. code-block ::
-    conda install -c thassan cmpdata
+.. code-block::
+	conda install -c thassan cmpdata
 
 For ``pip`` installation, you have to first install dependencies
  ::
