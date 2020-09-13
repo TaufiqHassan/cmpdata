@@ -27,20 +27,20 @@ Installation
 ------------
 
 ``cmpdata`` is installable using ``conda`` or ``pip``. Conda installation is simple as:
-
-    ``conda install -c thassan cmpdata``
+ ::
+    conda install -c thassan cmpdata
 
 For ``pip`` installation, you have to first install dependencies:
-.. code-block ::
+ ::
     conda install -c conda-forge dask netCDF4
     conda install -c conda-forge xesmf esmpy=7.1.0
     pip install cmpdata
 
 Alternatively, use the yml files in ci directory to create appropriate environement:
-
-    ``conda env create --file environment-py37.yml
+ ::
+    conda env create --file environment-py37.yml
     source activate cmdata
-    pip install cmpdata``
+    pip install cmpdata
 
 Requires python v3.6 or v3.7 and supports both Mac and Linux. Windows users can use `Windows Subsystem`_.
 
