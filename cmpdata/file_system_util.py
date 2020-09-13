@@ -151,7 +151,7 @@ def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',s
     ds_r=[0]*len(rlzn)
     m=0
     for r in rlzn:
-        try:
+        #try:
             print('\ncalculating for: ', r)
             uri = df[(df.source_id == mod) & (df.realization == r)]['data'].values
             if (init != None) or (end != None):
@@ -161,7 +161,7 @@ def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',s
             ds_r[m] = ds_rr
             print('\nData shape:',ds_r[m].shape)
             m=m+1
-        except:
+        #except:
             print('\nFound issue on',r,'realization of',mod)
             print('\nIgnoring',r)
             continue

@@ -16,6 +16,7 @@ requirements = [
     'dask',
     'netCDF4',
     'xesmf',
+    'esmpy=7.1.0'
     'pytest',
     'setuptools',
 ]
@@ -26,7 +27,7 @@ test_requirements = [
 
 setup(
     name='cmpdata',
-    version='1.0.4',
+    version='1.0.5',
     description="Package for handling CMIP6 data",
     long_description=readme,
     author="Taufiq Hassan",
