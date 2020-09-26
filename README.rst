@@ -47,6 +47,38 @@ Requires python v3.6 or v3.7 and supports both Mac and Linux. Windows users can 
 .. _`Windows Subsystem`: https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
 
+Usage
+------
+
+``cmpdata`` can be used to handle and analyze raw CMIP6 data. A lot of the options available in ``acccmip6`` is available in ``cmpdata``, especially for selecting models, experiments and variables. 
+``cmpdata`` also tries to be a good command-line interface (CLI). Run ``cmpdata -h`` to see a help message with all the arguments you can pass.
+
+Required Arguments
+------------------
+
+- ``-o`` : Takes output type. 
+         'info' for the files information (number of files, avaialble models, variables, experiments and realizations) in a directory. 
+         'rm' for performing ensemble realization means
+         'mm' for performing ensemble model mean
+
+Optional Arguments
+------------------
+
+- ``-dir`` : Selected directory
+- ``-m`` : Model names (multiple comma separated names are allowed)
+- ``-e`` : Experiment names
+- ``-v`` : Variable names
+- ``-r`` : Realizations
+- ``-init`` : Initial year selection
+- ``-end`` : Ending year selection
+- ``-e2`` : Secondary experiment name
+- ``-dir2`` : Selected directory for the second experiment
+- ``-t`` : Temporal mean option
+- ``-s`` : Seasonal mean option (use in conjunction with ``-t`` option)
+- ``-f`` : Temporal mean fequency (use in conjunction with ``-t`` option)
+- ``-rm`` : Use the realization means
+- ``-curve`` : Regridding to curvilinear grids
+
 License
 -------
 

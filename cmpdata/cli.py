@@ -16,8 +16,8 @@ def main():
     
     parser = argparse.ArgumentParser()
     parser.add_argument("-o","--output-options", help="Select an output option", choices=['info', 'rm', 'mm'], required=True)
-    parser.add_argument("-dir", help="Download directory.", default=None)
-    parser.add_argument("-dir2", help="Download directory for the 2nd experiment", default=None)
+    parser.add_argument("-dir", help="Select directory.", default=None)
+    parser.add_argument("-dir2", help="Select directory for the second experiment", default=None)
     parser.add_argument("-m", help="Model names", default=None)
     parser.add_argument("-e", help="Experiment names", default=None)
     parser.add_argument("-v", help="Variable names", default=None)
