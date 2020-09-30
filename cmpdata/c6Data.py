@@ -28,7 +28,9 @@ class get_data(object):
         self.tmean = kwargs.get('tmean', None)
         self.exp2 = kwargs.get('exp2', None)
         self.dir_path2 = kwargs.get('dir_path2', None)
-
+        self.whole = kwargs.get('whole', None)
+        self.out = kwargs.get('out', None)
+        
     @property
     def extMod(self):
         return self._extMod
@@ -82,6 +84,7 @@ class get_data(object):
         mm = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
                          extMod=self._extMod,\
                          init=self.init,end=self.end,nc=self.to_nc,curve=self.curve,\
-                         rm=self._rm,freq=self.freq,season=self.season,tmean=self.tmean).model_mean()
+                         rm=self._rm,freq=self.freq,season=self.season,tmean=self.tmean,whole=self.whole,out=self.out).model_mean()
         return mm
+
 

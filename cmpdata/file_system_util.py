@@ -165,7 +165,8 @@ def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',s
             print('\nFound issue on',r,'realization of',mod)
             print('\nIgnoring',r)
             continue
-    ds=sum(ds_r)/m
+    ds_all = xr.concat(ds_r,dim='ens')
+    ds=ds_all.mean(dim='ens')
     if tmean != None:
         ds = data_resample(ds,freq=freq,season=season,nc=None)._tmean()
     print('\nEnsemble data shape:',ds.shape)
@@ -260,6 +261,8 @@ class get_means(object):
         self.tmean = kwargs.get('tmean', None)
         self.exp2 = kwargs.get('exp2', None)
         self.dir_path2 = kwargs.get('dir_path2', None)
+        self.whole = kwargs.get('whole', None)
+        self.out = kwargs.get('out', None)
 
     def real_mean(self):
         with HidePrint(): 
@@ -334,16 +337,34 @@ class get_means(object):
         time = ds_m[0]['time'].values
         for zz in range(len(ds_m)):
             ds_m[zz]['time'] = time
-        ds=sum(ds_m)/len(mod)
-        print('\nEnsemble data shape:',ds.shape)
-        ds.name = var
+        ds = xr.concat(ds_m,dim='ens')
+        ds_mean=ds.mean(dim='ens')
+        print('\nEnsemble data shape:',ds_mean.shape)
+        ds_mean.name = var
         if self.to_nc != None:
             with ProgressBar():
-                if (self.init != None) or (self.end != None):
-                    ds.load().to_netcdf(var+'_mm_ModMean_'+exp+'_MM_'+str(self.init)+'-'+str(self.end)+'.nc')
+                if self.out !=None:
+                    ds_mean.load().to_netcdf(self.out)
                 else:
-                    ds.load().to_netcdf(var+'_mm_ModMean_'+exp+'_MM_.nc')
-        return ds
+                    if (self.init != None) or (self.end != None):
+                        if self.whole!=None:
+                            ds.load().to_netcdf(var+'_ens_ModMean_'+exp+'_MM_'+str(self.init)+'-'+str(self.end)+'.nc')
+                        else:
+                            ds_mean.load().to_netcdf(var+'_mm_ModMean_'+exp+'_MM_'+str(self.init)+'-'+str(self.end)+'.nc')
+                    else:
+                        if self.whole!=None:
+                            ds.load().to_netcdf(var+'_ens_ModMean_'+exp+'_MM_.nc')
+                        else:
+                            ds_mean.load().to_netcdf(var+'_mm_ModMean_'+exp+'_MM_.nc')
+        return ds_mean
 
-
-    
+def _mod_help():
+    print("\n"+color.PURPLE+"                <<You are using the STATS module now>>"+color.END+'\n')
+    print(color.BOLD+color.UNDERLINE+"Usage:"+color.END+" cmpdata -o stats <input> <optional output> <optional args>\n")
+    print(color.UNDERLINE+"stat options:"+color.END)
+    print("\nmonClim = monthly climatology \
+          \nmonAnom = monthly anomalies \
+          \nmodAnom = model anomalies \
+          \nmodMean = ensemble model mean, where different models are saved under the 'ens' dimention.\
+          \nmodStd = standard deviation within the models, where different models are saved under the 'ens' dimention.\
+          \n")    

@@ -7,30 +7,39 @@ Created on Mon Sep  7 14:40:38 2020
 import argparse
 
 from cmpdata.c6Data import get_data
-from cmpdata.file_system_util import _check_list
+from cmpdata.file_system_util import _check_list, _mod_help
+from cmpdata.c6Stats import data_resample
 
 import warnings
 warnings.filterwarnings("ignore")
-        
+       
 def main():
     
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o","--output-options", help="Select an output option", choices=['info', 'rm', 'mm'], required=True)
+    def myerror(message):
+        print(message)
+
+    parser.error=myerror
+
+    parser.add_argument("-o","--output-options", help="Select an output option", choices=['info', 'rm', 'mm','stats'], required=True)
     parser.add_argument("-dir", help="Select directory.", default=None)
     parser.add_argument("-dir2", help="Select directory for the second experiment", default=None)
     parser.add_argument("-m", help="Model names", default=None)
     parser.add_argument("-e", help="Experiment names", default=None)
     parser.add_argument("-v", help="Variable names", default=None)
     parser.add_argument("-r", help="Realization", default=None)
+    parser.add_argument("-out", help="Output file name", default=None)
+    parser.add_argument('stats',action='append',nargs=2,help=argparse.SUPPRESS,default=None)
     
     parser.add_argument("-init", help="Initial year", default=None)
     parser.add_argument("-end", help="Ending year", default=None)
     parser.add_argument("-e2", help="Secondary experiment name", default=None)
-    parser.add_argument("-t", help="Temporal mean option", default=None)
+    parser.add_argument("-t", help="Temporal mean option", action='store_true', default=None)
     parser.add_argument("-s", help="Seasonal mean option", choices=['DJF', 'MAM', 'SON', 'JJA'], default=None)
     parser.add_argument("-f", help="Temporal mean frequency", choices=['annual','daily','monthly'],default='annual')
     parser.add_argument("-rm", help="Use the realization means", default=None)
-    parser.add_argument("-curve", help="Regridding to curvilinear grids", default=None)
+    parser.add_argument("-curve", help="Regridding to curvilinear grids", action='store_true', default=None)
+    parser.add_argument("-w", help="Get all model means a single file (used for certain statistical analysis later)", action='store_true', default=None)
     
     args = parser.parse_args()
     search_dir = args.dir
@@ -47,13 +56,16 @@ def main():
     tmean = args.t
     rm = args.rm
     curve = args.curve
+    w = args.w
+    out = args.out
+    astat = args.stats
     
-    out = args.output_options
-    
-    if out == 'info':
+    output = args.output_options
+        
+    if output == 'info':
         get_data(dir_path=search_dir,model=model,variable=variable,\
                  experiment=experiment,realization=realization,rm=rm).get_info()
-    elif out == 'rm':
+    elif output == 'rm':
         data = get_data(dir_path=search_dir,\
                  init=init,end=end,\
                  exp2=exp2,dir_path2=d2,\
@@ -65,14 +77,28 @@ def main():
         if (experiment != None):
             data.extExp=experiment
         data.get_rm()
-    elif out == 'mm':
+    elif output == 'mm':
         data = get_data(dir_path=search_dir,variable=variable,experiment=experiment,\
                  init=init,end=end,\
-                 freq=freq,season=season,tmean=tmean,rm=rm,curve=curve)
+                 freq=freq,season=season,tmean=tmean,rm=rm,curve=curve,whole=w,out=out)
         if (model != None):
             data.extMod=model
         data.get_mm()
-
+    elif output == 'stats':
+        try:
+            print('\nSelected stat option:',astat[0][1])
+            if astat[0][1] == 'modMean':
+                data_resample(fname=astat[0][0],out=out,modMean = 'modMean')._mod_mean()
+            if astat[0][1] == 'modStd':
+                data_resample(fname=astat[0][0],out=out,modStd = 'modStd')._mod_mean()
+            if astat[0][1] == 'monClim':
+                data_resample(fname=astat[0][0],out=out,monClim = 'monClim')._mod_mean()
+            if astat[0][1] == 'monAnom':
+                data_resample(fname=astat[0][0],out=out,monAnom = 'monAnom')._mod_mean()
+            if astat[0][1] == 'modAnom':
+                data_resample(fname=astat[0][0],out=out,modAnom = 'modAnom',init=init,end=end)._mod_mean()
+        except:
+            _mod_help()
     
 
 
