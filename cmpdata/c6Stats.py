@@ -30,7 +30,7 @@ def trend_calc(var,init,end,ci=0.95):
             else:
                 m,s,c=do_ttest(var[init:end,yy,xx][mask],ci=ci)
             tru.data[yy,xx]=m
-            tru.mask[yy,xx]= ~s
+            tru.mask[yy,xx]= s
     return tru.data, tru.mask
 
 def get_aggr(var,init,end,ci=0.95):

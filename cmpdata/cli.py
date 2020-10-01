@@ -31,8 +31,8 @@ def main():
     parser.add_argument("-out", help="Output file name", default=None)
     parser.add_argument('stats',action='append',nargs=2,help=argparse.SUPPRESS,default=None)
     
-    parser.add_argument("-init", help="Initial year", default=None)
-    parser.add_argument("-end", help="Ending year", default=None)
+    parser.add_argument("-init", help="Initial year", default=0)
+    parser.add_argument("-end", help="Ending year", default=-1)
     parser.add_argument("-e2", help="Secondary experiment name", default=None)
     parser.add_argument("-t", help="Temporal mean option", action='store_true', default=None)
     parser.add_argument("-s", help="Seasonal mean option", choices=['DJF', 'MAM', 'SON', 'JJA'], default=None)
