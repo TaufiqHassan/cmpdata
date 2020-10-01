@@ -365,6 +365,11 @@ def _mod_help():
     print("\nmonClim = monthly climatology \
           \nmonAnom = monthly anomalies \
           \nmodAnom = model anomalies \
+          \nzonMean = zonal mean \
           \nmodMean = ensemble model mean, where different models are saved under the 'ens' dimention.\
           \nmodStd = standard deviation within the models, where different models are saved under the 'ens' dimention.\
+          \ntANN/tDJF/tMAM/tSON/tJJA = resample to yearly/seasonal mean data \
+          \ntmon/tday = resample to monthly or daily mean data\
+          \ntrend = calculate spatial grid by grid trends \
+          \nmodAggr = estimate model aggreement on the sign of the signal, where different models are saved under the 'ens' dimention. \
           \n")    
