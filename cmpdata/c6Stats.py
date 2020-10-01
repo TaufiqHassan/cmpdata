@@ -19,7 +19,7 @@ def do_ttest(x,ci=0.95):
     ci = 1.96*stderr
     return (trnd, tsig, ci )
 
-def trend_calc(var,init,end,ci):
+def trend_calc(var,init,end,ci=0.95):
     tru = np.ma.masked_all(var.shape[1:])
     var=var.values
     for yy in range(tru.shape[0]):
@@ -33,7 +33,7 @@ def trend_calc(var,init,end,ci):
             tru.mask[yy,xx]= ~s
     return tru.data, tru.mask
 
-def get_aggr(var,init,end,ci):
+def get_aggr(var,init,end,ci=0.95):
     tru = np.zeros(var[0].shape[1:])
     for jj in range(len(var)):
         v=trend_calc(var[jj],init,end,ci=ci)[0]
@@ -68,12 +68,16 @@ class data_resample(object):
         SeaMon = {'DJF':[12,1,2],'MAM':[3,4,5],'JJA':[6,7,8],'SON':[9,10,11]}
         if type(self.fname) is str:
             if self._var == None:
-                var = self.fname.split('/')[-1].split('_')[0]
+                try:
+                    varbl = self.fname.split('/')[-1].split('_')[0]
+                except:
+                    varbl = 'Unknown'
             else:
-                var = self._var
-            data = xr.open_mfdataset(self.fname)[var]
+                varbl = self._var
+            data = xr.open_mfdataset(self.fname)[varbl]
         else:
             data = self.fname
+            varbl = self._var
         if self.freq == 'monthly':
             data = data.resample(time="1MS").mean(dim='time')
         elif self.freq == 'daily':
@@ -91,7 +95,7 @@ class data_resample(object):
             except:
                 data = data.groupby('time.year').mean('time')
                 data = data.rename({'year':'time'})
-        data.name = var
+        data.name = varbl
         if self.nc == 'yes':
             with ProgressBar():
                 if self.out !=None:
@@ -107,12 +111,16 @@ class data_resample(object):
     def _mod_mean(self):
         if type(self.fname) is str:
             if self._var == None:
-                var = self.fname.split('/')[-1].split('_')[0]
+                try:
+                    varbl = self.fname.split('/')[-1].split('_')[0]
+                except:
+                    varbl = 'Unknown'
             else:
-                var = self._var
-            data = xr.open_mfdataset(self.fname)[var]
+                varbl = self._var
+            data = xr.open_mfdataset(self.fname)[varbl]
         else:
             data = self.fname
+            varbl = self._var
         if self.modMean != None:
             ds=data.mean(dim='ens')
             name_string = 'modMean'
@@ -137,7 +145,7 @@ class data_resample(object):
             else:
                 ds = data - data.mean(dim='time')
         elif self.trend != None:
-            trend = trend_calc(data,self.init,self.end,ci=self.ci)
+            trend = trend_calc(data,int(self.init),int(self.end),ci=float(self.ci))
             t = xr.DataArray(trend[0],dims=['lat','lon'],coords={'lat':data.lat,'lon':data.lon})
             t.name = 'trend'
             s = xr.DataArray(trend[1],dims=['lat','lon'],coords={'lat':data.lat,'lon':data.lon})
@@ -145,7 +153,7 @@ class data_resample(object):
             ds = xr.merge([t,s])
             name_string = 'trend'
         elif self.aggr != None:
-            ds = get_aggr(data,self.init,self.end,ci=self.ci)
+            ds = get_aggr(data,int(self.init),int(self.end),ci=float(self.ci))
             ds.name = 'model_agreement'
             name_string = 'model_agreement'
         if self.nc == 'yes':

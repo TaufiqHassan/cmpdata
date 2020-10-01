@@ -57,9 +57,10 @@ Required Arguments
 ------------------
 
 - ``-o`` : Takes output type. 
-         'info' for the files information (number of files, avaialble models, variables, experiments and realizations) in a directory. 
-         'rm' for performing ensemble realization means
-         'mm' for performing ensemble model mean
+         'info' for the files information (number of files, avaialble models, variables, experiments and realizations) in a directory,
+         'rm' for performing ensemble realization means,
+         'mm' for performing ensemble model mean and
+         'stats' for performing statistical analysis.
 
 Optional Arguments
 ------------------

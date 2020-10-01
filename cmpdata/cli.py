@@ -40,7 +40,7 @@ def main():
     parser.add_argument("-rm", help="Use the realization means", default=None)
     parser.add_argument("-curve", help="Regridding to curvilinear grids", action='store_true', default=None)
     parser.add_argument("-w", help="Get all model means a single file (used for certain statistical analysis later)", action='store_true', default=None)
-    parser.add_argument("-ci", help="confidence interval used in stats", default=None)
+    parser.add_argument("-ci", help="confidence interval used in stats", default=0.95)
     
     args = parser.parse_args()
     search_dir = args.dir
@@ -87,40 +87,40 @@ def main():
             data.extMod=model
         data.get_mm()
     elif output == 'stats':
-        try:
+#        try:
             print('\nSelected stat option:',astat[0][1])
             if astat[0][1] == 'modMean':
-                data_resample(fname=astat[0][0],out=out,modMean = 'modMean')._mod_mean()
+                data_resample(fname=astat[0][0],var=variable,out=out,modMean = 'modMean')._mod_mean()
             if astat[0][1] == 'zonMean':
-                data_resample(fname=astat[0][0],out=out,zonMean = 'zonMean')._mod_mean()
+                data_resample(fname=astat[0][0],var=variable,out=out,zonMean = 'zonMean')._mod_mean()
             if astat[0][1] == 'modStd':
-                data_resample(fname=astat[0][0],out=out,modStd = 'modStd')._mod_mean()
+                data_resample(fname=astat[0][0],var=variable,out=out,modStd = 'modStd')._mod_mean()
             if astat[0][1] == 'monClim':
-                data_resample(fname=astat[0][0],out=out,monClim = 'monClim')._mod_mean()
+                data_resample(fname=astat[0][0],var=variable,out=out,monClim = 'monClim')._mod_mean()
             if astat[0][1] == 'monAnom':
-                data_resample(fname=astat[0][0],out=out,monAnom = 'monAnom')._mod_mean()
+                data_resample(fname=astat[0][0],var=variable,out=out,monAnom = 'monAnom')._mod_mean()
             if astat[0][1] == 'modAnom':
-                data_resample(fname=astat[0][0],out=out,modAnom = 'modAnom',init=init,end=end)._mod_mean()
+                data_resample(fname=astat[0][0],var=variable,out=out,modAnom = 'modAnom',init=init,end=end)._mod_mean()
             if astat[0][1] == 'tANN':
-                data_resample(fname=astat[0][0],out=out)._tmean()
+                data_resample(fname=astat[0][0],var=variable,out=out)._tmean()
             if astat[0][1] == 'tDJF':
-                data_resample(fname=astat[0][0],out=out,season='DJF')._tmean()
+                data_resample(fname=astat[0][0],var=variable,out=out,season='DJF')._tmean()
             if astat[0][1] == 'tMAM':
-                data_resample(fname=astat[0][0],out=out,season='MAM')._tmean()
+                data_resample(fname=astat[0][0],var=variable,out=out,season='MAM')._tmean()
             if astat[0][1] == 'tJJA':
-                data_resample(fname=astat[0][0],out=out,season='JJA')._tmean()
+                data_resample(fname=astat[0][0],var=variable,out=out,season='JJA')._tmean()
             if astat[0][1] == 'tSON':
-                data_resample(fname=astat[0][0],out=out,season='SON')._tmean()
+                data_resample(fname=astat[0][0],var=variable,out=out,season='SON')._tmean()
             if astat[0][1] == 'tmon':
-                data_resample(fname=astat[0][0],out=out,freq='monthly')._tmean()
+                data_resample(fname=astat[0][0],var=variable,out=out,freq='monthly')._tmean()
             if astat[0][1] == 'tday':
-                data_resample(fname=astat[0][0],out=out,freq='daily')._tmean()
+                data_resample(fname=astat[0][0],var=variable,out=out,freq='daily')._tmean()
             if astat[0][1] == 'trend':
-                data_resample(fname=astat[0][0],trend='yes',out=out,init=init,end=end,ci=ci)._mod_mean()
+                data_resample(fname=astat[0][0],var=variable,trend='trend',out=out,init=init,end=end,ci=ci)._mod_mean()
             if astat[0][1] == 'modAggr':
-                data_resample(fname=astat[0][0],aggr='yes',out=out,init=init,end=end,ci=ci)._mod_mean()
-        except:
-            _mod_help()
+                data_resample(fname=astat[0][0],var=variable,aggr='aggr',out=out,init=init,end=end,ci=ci)._mod_mean()
+#        except:
+#            _mod_help()
     
 
 

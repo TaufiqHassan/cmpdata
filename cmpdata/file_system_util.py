@@ -168,7 +168,7 @@ def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',s
     ds_all = xr.concat(ds_r,dim='ens')
     ds=ds_all.mean(dim='ens')
     if tmean != None:
-        ds = data_resample(ds,freq=freq,season=season,nc=None)._tmean()
+        ds = data_resample(ds,var=var,freq=freq,season=season,nc=None)._tmean()
     print('\nEnsemble data shape:',ds.shape)
     ds.name = var
     if nc != None:
