@@ -87,7 +87,7 @@ def main():
             data.extMod=model
         data.get_mm()
     elif output == 'stats':
-#        try:
+        try:
             print('\nSelected stat option:',astat[0][1])
             if astat[0][1] == 'modMean':
                 data_resample(fname=astat[0][0],var=variable,out=out,modMean = 'modMean')._mod_mean()
@@ -118,9 +118,10 @@ def main():
             if astat[0][1] == 'trend':
                 data_resample(fname=astat[0][0],var=variable,trend='trend',out=out,init=init,end=end,ci=ci)._mod_mean()
             if astat[0][1] == 'modAggr':
+                print('\nThis may take some time . . .')
                 data_resample(fname=astat[0][0],var=variable,aggr='aggr',out=out,init=init,end=end,ci=ci)._mod_mean()
-#        except:
-#            _mod_help()
+        except:
+            _mod_help()
     
 
 
