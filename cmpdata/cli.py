@@ -31,8 +31,8 @@ def main():
     parser.add_argument("-out", help="Output file name", default=None)
     parser.add_argument('stats',action='append',nargs=2,help=argparse.SUPPRESS,default=None)
     
-    parser.add_argument("-init", help="Initial year", default=0)
-    parser.add_argument("-end", help="Ending year", default=-1)
+    parser.add_argument("-init", help="Initial year", default=None)
+    parser.add_argument("-end", help="Ending year", default=None)
     parser.add_argument("-e2", help="Secondary experiment name", default=None)
     parser.add_argument("-t", help="Temporal mean option", action='store_true', default=None)
     parser.add_argument("-s", help="Seasonal mean option", choices=['DJF', 'MAM', 'SON', 'JJA'], default=None)
@@ -41,6 +41,7 @@ def main():
     parser.add_argument("-curve", help="Regridding to curvilinear grids", action='store_true', default=None)
     parser.add_argument("-w", help="Get all model means a single file (used for certain statistical analysis later)", action='store_true', default=None)
     parser.add_argument("-ci", help="confidence interval used in stats", default=0.95)
+    parser.add_argument("-regrid", help="regridding on/off", default=None)
     
     args = parser.parse_args()
     search_dir = args.dir
@@ -61,6 +62,7 @@ def main():
     out = args.out
     astat = args.stats
     ci = args.ci
+    regrid = args.regrid
     
     output = args.output_options
         
@@ -71,7 +73,7 @@ def main():
         data = get_data(dir_path=search_dir,\
                  init=init,end=end,\
                  exp2=exp2,dir_path2=d2,\
-                 freq=freq,season=season,tmean=tmean)
+                 freq=freq,season=season,tmean=tmean,curve=curve,regrid=regrid)
         if (model != None):
             data.extMod=model
         if (variable != None):
@@ -81,7 +83,7 @@ def main():
         data.get_rm()
     elif output == 'mm':
         data = get_data(dir_path=search_dir,variable=variable,experiment=experiment,\
-                 init=init,end=end,\
+                 init=init,end=end,regrid=regrid, \
                  freq=freq,season=season,tmean=tmean,rm=rm,curve=curve,whole=w,out=out)
         if (model != None):
             data.extMod=model
