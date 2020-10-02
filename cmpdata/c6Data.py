@@ -30,6 +30,7 @@ class get_data(object):
         self.dir_path2 = kwargs.get('dir_path2', None)
         self.whole = kwargs.get('whole', None)
         self.out = kwargs.get('out', None)
+        self.regrid = kwargs.get('regrid', None)
         
     @property
     def extMod(self):
@@ -77,12 +78,13 @@ class get_data(object):
                          extMod=self._extMod,extExp=self._extExp,extVar=self._extVar,\
                          init=self.init,end=self.end,nc=self.to_nc,\
                          freq=self.freq,season=self.season,tmean=self.tmean,\
-                         exp2=self.exp2,dir_path2=self.dir_path2).real_mean()
+                         exp2=self.exp2,dir_path2=self.dir_path2, \
+                         regrid=self.regrid,curve=self.curve).real_mean()
         return rm
     
     def get_mm(self):
         mm = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
-                         extMod=self._extMod,\
+                         extMod=self._extMod,regrid=self.regrid, \
                          init=self.init,end=self.end,nc=self.to_nc,curve=self.curve,\
                          rm=self._rm,freq=self.freq,season=self.season,tmean=self.tmean,whole=self.whole,out=self.out).model_mean()
         return mm

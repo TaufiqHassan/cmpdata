@@ -140,7 +140,7 @@ class search_dir(object):
             self.get_data()
         return data
 
-def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',season=None,exdf2=pd.DataFrame()):
+def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',season=None,exdf2=pd.DataFrame(),curve=None,regrid=None):
     if not exdf2.empty:
         rlzn1 = df['realization'][df.source_id == mod].unique()
         rlzn2 = exdf2['realization'][exdf2.source_id == mod].unique()
@@ -155,20 +155,24 @@ def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',s
             print('\ncalculating for: ', r)
             uri = df[(df.source_id == mod) & (df.realization == r)]['data'].values
             if (init != None) or (end != None):
-                ds_rr = xr.open_mfdataset(uri, combine='by_coords')[var].sel(time=slice(str(init),str(end)))
+                ds_rr = xr.open_mfdataset(uri, combine='by_coords').sel(time=slice(str(init),str(end)))
             else:
-                ds_rr = xr.open_mfdataset(uri, combine='by_coords')[var]
-            ds_r[m] = ds_rr
+                ds_rr = xr.open_mfdataset(uri, combine='by_coords')
+            ds_r[m] = ds_rr[var]
             print('\nData shape:',ds_r[m].shape)
             m=m+1
         except:
             print('\nFound issue on',r,'realization of',mod)
             print('\nIgnoring',r)
             continue
-    ds_all = xr.concat(ds_r,dim='ens')
-    ds=ds_all.mean(dim='ens')
+    ds = sum(ds_r)/len(rlzn)
     if tmean != None:
         ds = data_resample(ds,var=var,freq=freq,season=season,nc=None)._tmean()
+    if regrid!= None:
+        if curve != None:
+            ds = _curv_regrid(ds, ds_in=ds_rr)
+        else:
+            ds = _rect_regrid(ds, ds_in=ds_rr)
     print('\nEnsemble data shape:',ds.shape)
     ds.name = var
     if nc != None:
@@ -179,14 +183,15 @@ def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',s
                 ds.load().to_netcdf(var+'_rm_'+mod+'_'+exp+'_RM_.nc')
     return ds
 
-def _rect_regrid(dr):
-    try:
-        ds_in = dr.rename({'longitude':'lon','latitude':'lat'})
-    except:
+def _rect_regrid(dr, ds_in=None):
+    if ds_in == None:
         try:
-            ds_in=dr.rename({'nav_lon':'lon','nav_lat':'lat'})
+            ds_in = dr.rename({'longitude':'lon','latitude':'lat'})
         except:
-            ds_in = dr
+            try:
+                ds_in=dr.rename({'nav_lon':'lon','nav_lat':'lat'})
+            except:
+                ds_in = dr
     ds_out=xr.Dataset({'lat': (['lat'], np.arange(-89.5, 90.0, 1.0)),\
                            'lon': (['lon'], np.arange(0, 360, 1.0)),})
     regridder = xe.Regridder(ds_in, ds_out, 'bilinear')
@@ -194,14 +199,15 @@ def _rect_regrid(dr):
     regridder.clean_weight_file()
     return ds
 
-def _curv_regrid(dr):
-    try:
-        ds_in = dr.rename({'longitude':'lon','latitude':'lat'})
-    except:
+def _curv_regrid(dr, ds_in=None):
+    if ds_in == None:
         try:
-            ds_in=dr.rename({'nav_lon':'lon','nav_lat':'lat'})
+            ds_in = dr.rename({'longitude':'lon','latitude':'lat'})
         except:
-            ds_in = dr
+            try:
+                ds_in=dr.rename({'nav_lon':'lon','nav_lat':'lat'})
+            except:
+                ds_in = dr
     ds_out=xe.util.grid_global(1, 1)
     regridder = xe.Regridder(ds_in, ds_out, 'bilinear')
     ds = regridder(dr)
@@ -263,6 +269,7 @@ class get_means(object):
         self.dir_path2 = kwargs.get('dir_path2', None)
         self.whole = kwargs.get('whole', None)
         self.out = kwargs.get('out', None)
+        self.regrid = kwargs.get('regrid', None)
 
     def real_mean(self):
         with HidePrint(): 
@@ -297,18 +304,20 @@ class get_means(object):
                 if self.exp2 != None:
                     ds1 = _get_rm(df,var=v,mod=m,exp=exp[0],\
                        init=self.init,end=self.end,nc=None,\
-                       freq=self.freq,season=self.season,tmean=self.tmean,exdf2=df2)
-
+                       freq=self.freq,season=self.season,tmean=self.tmean,exdf2=df2, \
+                       regrid=self.regrid,curve=self.curve)
                     ds2 = _get_rm(df2,var=v,mod=m,exp=self.exp2,\
                        init=self.init,end=self.end,nc=None,\
-                       freq=self.freq,season=self.season,tmean=self.tmean,exdf2=df)
+                       freq=self.freq,season=self.season,tmean=self.tmean,exdf2=df, \
+                       regrid=self.regrid,curve=self.curve)
                     ds1 = concat_data(ds1,ds2,nc='no')._cExp()
                 else:
                     for e in exp:
                         print('\nFor experiment: ', e)
                         ds1 = _get_rm(df,var=v,mod=m,exp=e,\
                            init=self.init,end=self.end,nc=self.to_nc,\
-                           freq=self.freq,season=self.season,tmean=self.tmean)
+                           freq=self.freq,season=self.season,tmean=self.tmean, \
+                           regrid=self.regrid,curve=self.curve)
 
                 ds.append(ds1)
         return ds
@@ -330,10 +339,13 @@ class get_means(object):
             dr = _get_rm(df,var=var,mod=m,exp=exp,\
                    init=self.init,end=self.end,freq=self.freq,\
                    season=self.season,tmean=self.tmean)
-            if self.curve != None:
-                ds_m.append(_curv_regrid(dr))
+            if self.regrid != 'off':
+                if self.curve != None:
+                    ds_m.append(_curv_regrid(dr))
+                else:
+                    ds_m.append(_rect_regrid(dr))
             else:
-                ds_m.append(_rect_regrid(dr))
+                ds_m.append(dr)
         time = ds_m[0]['time'].values
         for zz in range(len(ds_m)):
             ds_m[zz]['time'] = time

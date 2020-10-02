@@ -37,7 +37,7 @@ def main():
     parser.add_argument("-t", help="Temporal mean option", action='store_true', default=None)
     parser.add_argument("-s", help="Seasonal mean option", choices=['DJF', 'MAM', 'SON', 'JJA'], default=None)
     parser.add_argument("-f", help="Temporal mean frequency", choices=['annual','daily','monthly'],default='annual')
-    parser.add_argument("-rm", help="Use the realization means", default=None)
+    parser.add_argument("-rm", help="Use the realization means", action='store_true', default=None)
     parser.add_argument("-curve", help="Regridding to curvilinear grids", action='store_true', default=None)
     parser.add_argument("-w", help="Get all model means a single file (used for certain statistical analysis later)", action='store_true', default=None)
     parser.add_argument("-ci", help="confidence interval used in stats", default=0.95)

@@ -168,5 +168,5 @@ class data_resample(object):
         else:
             return ds
 
-
+#['MIROC6', 'CESM2', 'GFDL-CM4', 'MIROC-ES2L', 'IPSL-CM6A-LR','HadGEM3-GC31-LL', 'CNRM-CM6-1', 'INM-CM5-0', 'MPI-ESM1-2-LR','CNRM-ESM2-1', 'UKESM1-0-LL', 'NESM3', 'BCC-CSM2-MR', 'NorESM2-LM','CanESM5', 'CAMS-CSM1-0', 'INM-CM4-8', 'CESM2-WACCM', 'ACCESS-CM2','MRI-ESM2-0', 'NorESM2-MM', 'ACCESS-ESM1-5', 'EC-Earth3-Veg','MPI-ESM1-2-HR']
 ## mean, std, climatology, anomaly, agreement, trendmap, correlation map
