@@ -34,6 +34,7 @@ venv/
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+PET0.ESMF_LogFile
 
 # Unit test / coverage reports
 htmlcov/

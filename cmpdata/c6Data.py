@@ -26,6 +26,7 @@ class get_data(object):
         self.freq = kwargs.get('freq', 'annual')
         self.season = kwargs.get('season', None)
         self.tmean = kwargs.get('tmean', None)
+        self.zmean = kwargs.get('zmean', None)
         self.exp2 = kwargs.get('exp2', None)
         self.dir_path2 = kwargs.get('dir_path2', None)
         self.whole = kwargs.get('whole', None)
@@ -73,13 +74,30 @@ class get_data(object):
                           experiment=self._exp,realization=self._rlzn,rm=self._rm).specific_data()
         return info
     
+    def get_sfs(self):
+        r = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
+                         extMod=self._extMod,extExp=self._extExp,extVar=self._extVar,\
+                         nc=self.to_nc,\
+                         freq=self.freq,season=self.season,tmean=self.tmean,zmean=self.zmean,\
+                         regrid=self.regrid,curve=self.curve,realization=self._rlzn).single_files()
+        return r
+    
+    def get_realizations(self):
+        r = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
+                         extMod=self._extMod,extExp=self._extExp,extVar=self._extVar,\
+                         init=self.init,end=self.end,nc=self.to_nc,\
+                         freq=self.freq,season=self.season,tmean=self.tmean,\
+                         exp2=self.exp2,dir_path2=self.dir_path2, \
+                         regrid=self.regrid,curve=self.curve).realizations()
+        return r
+    
     def get_rm(self):
         rm = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
                          extMod=self._extMod,extExp=self._extExp,extVar=self._extVar,\
                          init=self.init,end=self.end,nc=self.to_nc,\
                          freq=self.freq,season=self.season,tmean=self.tmean,\
                          exp2=self.exp2,dir_path2=self.dir_path2, \
-                         regrid=self.regrid,curve=self.curve).real_mean()
+                         regrid=self.regrid,curve=self.curve,realization=self._rlzn).real_mean()
         return rm
     
     def get_mm(self):

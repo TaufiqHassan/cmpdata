@@ -21,7 +21,7 @@ def main():
 
     parser.error=myerror
 
-    parser.add_argument("-o","--output-options", help="Select an output option", choices=['info', 'rm', 'mm','stats'], required=True)
+    parser.add_argument("-o","--output-options", help="Select an output option", choices=['info', 'sf', 'r', 'rm', 'mm','stats'], required=True)
     parser.add_argument("-dir", help="Select directory.", default=None)
     parser.add_argument("-dir2", help="Select directory for the second experiment", default=None)
     parser.add_argument("-m", help="Model names", default=None)
@@ -35,8 +35,9 @@ def main():
     parser.add_argument("-end", help="Ending year", default=None)
     parser.add_argument("-e2", help="Secondary experiment name", default=None)
     parser.add_argument("-t", help="Temporal mean option", action='store_true', default=None)
-    parser.add_argument("-s", help="Seasonal mean option", choices=['DJF', 'MAM', 'SON', 'JJA'], default=None)
-    parser.add_argument("-f", help="Temporal mean frequency", choices=['annual','daily','monthly'],default='annual')
+    parser.add_argument("-z", help="Zonal mean option", action='store_true', default=None)
+    parser.add_argument("-s", help="Seasonal mean option", default=None)
+    parser.add_argument("-f", help="Temporal mean frequency", choices=['annual','daily','monthly'] ,default='annual')
     parser.add_argument("-rm", help="Use the realization means", action='store_true', default=None)
     parser.add_argument("-curve", help="Regridding to curvilinear grids", action='store_true', default=None)
     parser.add_argument("-w", help="Get all model means a single file (used for certain statistical analysis later)", action='store_true', default=None)
@@ -56,6 +57,7 @@ def main():
     freq = args.f
     season = args.s
     tmean = args.t
+    zmean = args.z
     rm = args.rm
     curve = args.curve
     w = args.w
@@ -69,11 +71,35 @@ def main():
     if output == 'info':
         get_data(dir_path=search_dir,model=model,variable=variable,\
                  experiment=experiment,realization=realization,rm=rm).get_info()
-    elif output == 'rm':
+    elif output == 'sf':
+        data = get_data(dir_path=search_dir,\
+                 init=init,end=end,\
+                 exp2=exp2,dir_path2=d2,\
+                 freq=freq,season=season,tmean=tmean,zmean=zmean,curve=curve,regrid=regrid,realization=realization)
+        if (model != None):
+            data.extMod=model
+        if (variable != None):
+            data.extVar=variable
+        if (experiment != None):
+            data.extExp=experiment
+        data.get_sfs()
+    elif output == 'r':
         data = get_data(dir_path=search_dir,\
                  init=init,end=end,\
                  exp2=exp2,dir_path2=d2,\
                  freq=freq,season=season,tmean=tmean,curve=curve,regrid=regrid)
+        if (model != None):
+            data.extMod=model
+        if (variable != None):
+            data.extVar=variable
+        if (experiment != None):
+            data.extExp=experiment
+        data.get_realizations()
+    elif output == 'rm':
+        data = get_data(dir_path=search_dir,\
+                 init=init,end=end,\
+                 exp2=exp2,dir_path2=d2,\
+                 freq=freq,season=season,tmean=tmean,curve=curve,regrid=regrid,realization=realization)
         if (model != None):
             data.extMod=model
         if (variable != None):

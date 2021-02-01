@@ -83,12 +83,17 @@ class data_resample(object):
         elif self.freq == 'daily':
             data = data.resample(time="1D").mean(dim='time')
         elif self.season != None:
-            data_sea = data.where((data['time.month'] == SeaMon[self.season][0]) | \
-                                  (data['time.month'] == SeaMon[self.season][1]) | \
-                                  (data['time.month'] == SeaMon[self.season][2]))
-            data_sea = data_sea.rolling(min_periods=3, center=True, time=3).mean()
-            data = data_sea.groupby('time.year').mean('time')
-            data = data.rename({'year':'time'})
+            try:
+                data_sea = data.where(data['time.month'] == int(self.season))
+                data = data_sea.groupby('time.year').mean('time')
+                data = data.rename({'year':'time'})
+            except:
+                data_sea = data.where((data['time.month'] == SeaMon[self.season][0]) | \
+                                      (data['time.month'] == SeaMon[self.season][1]) | \
+                                      (data['time.month'] == SeaMon[self.season][2]))
+                data_sea = data_sea.rolling(min_periods=3, center=True, time=3).mean()
+                data = data_sea.groupby('time.year').mean('time')
+                data = data.rename({'year':'time'})
         else:
             try:
                 data = data.resample(time="1AS").mean(dim='time')

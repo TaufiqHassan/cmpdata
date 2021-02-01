@@ -140,7 +140,7 @@ class search_dir(object):
             self.get_data()
         return data
 
-def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',season=None,exdf2=pd.DataFrame(),curve=None,regrid=None):
+def _get_realization(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',season=None,exdf2=pd.DataFrame(),curve=None,regrid=None):
     if not exdf2.empty:
         rlzn1 = df['realization'][df.source_id == mod].unique()
         rlzn2 = exdf2['realization'][exdf2.source_id == mod].unique()
@@ -148,12 +148,55 @@ def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',s
     else:
         rlzn = df['realization'][df.source_id == mod].unique()
     print('\nAvailable realizations:', rlzn)
+    for r in rlzn:
+        try:
+            print('\ncalculating for: ', r)
+            uri = df[(df.source_id == mod) & (df.realization == r) & (df.experiment_id == exp) & (df.variable_id == var)]['data'].values
+            print(uri)
+            if (init != None) or (end != None):
+                ds_rr = xr.open_mfdataset(uri, combine='by_coords').sel(time=slice(str(init),str(end)))
+            else:
+                ds_rr = xr.open_mfdataset(uri, combine='by_coords')
+            ds = ds_rr[var]
+            print('\nData shape:',ds.shape)
+            if tmean != None:
+                ds = data_resample(ds,var=var,freq=freq,season=season,nc=None)._tmean()
+            if regrid!= None:
+                if curve != None:
+                    ds = _curv_regrid(ds, ds_in=ds_rr)
+                else:
+                    ds = _rect_regrid(ds, ds_in=ds_rr)
+            print('\nEnsemble data shape:',ds.shape)
+            ds.name = var
+            if nc != None:
+                with ProgressBar():
+                    if (init != None) or (end != None):
+                        ds.load().to_netcdf(var+'_rm_'+mod+'_'+exp+'_'+r+'_'+str(init)+'-'+str(end)+'.nc')
+                    else:
+                        ds.load().to_netcdf(var+'_rm_'+mod+'_'+exp+'_'+r+'_.nc')
+        except:
+            print('\nFound issue on',r,'realization of',mod)
+            print('\nIgnoring',r)
+            continue
+
+def _get_rm(df,mod,var,exp,realization=None,init=None,end=None,nc=None,tmean=None,freq='annual',season=None,exdf2=pd.DataFrame(),curve=None,regrid=None):
+    if realization==None:
+        if not exdf2.empty:
+            rlzn1 = df['realization'][df.source_id == mod].unique()
+            rlzn2 = exdf2['realization'][exdf2.source_id == mod].unique()
+            rlzn = list(set(rlzn1) & set(rlzn2))
+        else:
+            rlzn = df['realization'][df.source_id == mod].unique()
+    else:
+        rlzn=[realization]
+    print('\nAvailable realizations:', rlzn)
     ds_r=[0]*len(rlzn)
     m=0
     for r in rlzn:
         try:
             print('\ncalculating for: ', r)
-            uri = df[(df.source_id == mod) & (df.realization == r)]['data'].values
+            uri = df[(df.source_id == mod) & (df.realization == r) & (df.experiment_id == exp) & (df.variable_id == var)]['data'].values
+            print(uri)
             if (init != None) or (end != None):
                 ds_rr = xr.open_mfdataset(uri, combine='by_coords').sel(time=slice(str(init),str(end)))
             else:
@@ -165,7 +208,7 @@ def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',s
             print('\nFound issue on',r,'realization of',mod)
             print('\nIgnoring',r)
             continue
-    ds = sum(ds_r)/len(rlzn)
+    ds = sum(ds_r)/m
     if tmean != None:
         ds = data_resample(ds,var=var,freq=freq,season=season,nc=None)._tmean()
     if regrid!= None:
@@ -183,7 +226,44 @@ def _get_rm(df,mod,var,exp,init=None,end=None,nc=None,tmean=None,freq='annual',s
                 ds.load().to_netcdf(var+'_rm_'+mod+'_'+exp+'_RM_.nc')
     return ds
 
-def _rect_regrid(dr, ds_in=None):
+def _get_single_file(df,mod,var,exp,realization=None,nc=None,tmean=None,zmean=None,freq='annual',season=None,curve=None,regrid=None):
+    print('\ncalculating for model: ', mod)
+    if realization!=None:
+        uri = df[(df.source_id == mod) & (df.experiment_id == exp) & (df.variable_id == var) & (df.realization == realization)]['data'].values
+    else:
+        uri = df[(df.source_id == mod) & (df.experiment_id == exp) & (df.variable_id == var)]['data'].values
+    print(uri)
+    for i in range(len(uri)):
+        try:
+            print(uri[i])
+            if (not os.path.exists(str(uri[i]).split('/')[-1][:-3]+'_pp.nc')):
+                ds_rr = xr.open_mfdataset(str(uri[i])[:-3]+'*', combine='by_coords')
+                ds = ds_rr[var]
+                print('\nData shape:',ds.shape)
+                if tmean != None:
+                    print('\nPerforming temporal mean . . .')
+                    ds = data_resample(ds,var=var,freq=freq,season=season,nc=None)._tmean()
+                if regrid!= None:
+                    if curve != None:
+                        ds = _curv_regrid(ds, ds_in=ds_rr)
+                    else:
+                        ds = _rect_regrid(ds, ds_in=ds_rr)
+                if zmean != None:
+                    print('\nPerforming zonal mean . . .')
+                    ds = data_resample(ds,var=var,zonMean='zonMean',nc=None)._mod_mean()
+                print('\nData shape:',ds.shape)
+                ds.name = var
+                if nc != None:
+                    with ProgressBar():
+                        ds.load().to_netcdf(str(uri[i]).split('/')[-1][:-3]+'_pp.nc')
+            else:
+                print(str(uri[i]).split('/')[-1][:-3]+'_pp.nc'+ ' already exists!\n')
+        except:
+            print('\nFound issue on',uri[i])
+            print('\nIgnoring',uri[i])
+            continue
+
+def _rect_regrid(dr, ds_in=None,_var=None):
     if ds_in == None:
         try:
             ds_in = dr.rename({'longitude':'lon','latitude':'lat'})
@@ -192,9 +272,20 @@ def _rect_regrid(dr, ds_in=None):
                 ds_in=dr.rename({'nav_lon':'lon','nav_lat':'lat'})
             except:
                 ds_in = dr
+    else:
+        try:
+            ds_in = ds_in.rename({'longitude':'lon','latitude':'lat'})
+        except:
+            try:
+                ds_in=ds_in.rename({'nav_lon':'lon','nav_lat':'lat'})
+            except:
+                ds_in = ds_in
     ds_out=xr.Dataset({'lat': (['lat'], np.arange(-89.5, 90.0, 1.0)),\
                            'lon': (['lon'], np.arange(0, 360, 1.0)),})
-    regridder = xe.Regridder(ds_in, ds_out, 'bilinear')
+    try:
+        regridder = xe.Regridder(ds_in, ds_out, 'bilinear',periodic=True)
+    except:
+        regridder = xe.Regridder(ds_in, ds_out, 'bilinear',periodic=True,ignore_degenerate=True)
     ds = regridder(dr)
     regridder.clean_weight_file()
     return ds
@@ -208,12 +299,22 @@ def _curv_regrid(dr, ds_in=None):
                 ds_in=dr.rename({'nav_lon':'lon','nav_lat':'lat'})
             except:
                 ds_in = dr
+    else:
+        try:
+            ds_in = ds_in.rename({'longitude':'lon','latitude':'lat'})
+        except:
+            try:
+                ds_in=ds_in.rename({'nav_lon':'lon','nav_lat':'lat'})
+            except:
+                ds_in = ds_in
     ds_out=xe.util.grid_global(1, 1)
-    regridder = xe.Regridder(ds_in, ds_out, 'bilinear')
+    try:
+        regridder = xe.Regridder(ds_in, ds_out, 'bilinear',periodic=True)
+    except:
+        regridder = xe.Regridder(ds_in, ds_out, 'bilinear',periodic=True,ignore_degenerate=True)
     ds = regridder(dr)
     regridder.clean_weight_file()
     return ds
-
 
 class concat_data(object):
     
@@ -224,6 +325,7 @@ class concat_data(object):
         self.nc = kwargs.get('nc', 'yes')
         self.init = kwargs.get('init', None)
         self.end = kwargs.get('end', None)
+        self.out = kwargs.get('out', None)
 
     def _cExp(self):
         if type(self.fname1) is str:
@@ -237,12 +339,16 @@ class concat_data(object):
             data1 = self.fname1
             data2 = self.fname2
         data = xr.concat([data1,data2],dim='time')
+        print('\nConcat shape:', data.shape)
         if self.nc == 'yes':
             with ProgressBar():
-                if (self.init != None) or (self.end != None):
-                    data.load().to_netcdf(('_').join(self.fname1.split('/')[-1].split('_')[:4])+'_'+str(self.init)+'-'+str(self.end)+'_combined.nc')
+                if self.out !=None:
+                    data.load().to_netcdf(self.out)
                 else:
-                    data.load().to_netcdf(('_').join(self.fname1.split('/')[-1].split('_')[:4])+'_combined.nc')
+                    if (self.init != None) or (self.end != None):
+                        data.load().to_netcdf(('_').join(self.fname1.split('/')[-1].split('_')[:4])+'_'+str(self.init)+'-'+str(self.end)+'_combined.nc')
+                    else:
+                        data.load().to_netcdf(('_').join(self.fname1.split('/')[-1].split('_')[:4])+'_combined.nc')
         else:
             return data  
 
@@ -265,12 +371,110 @@ class get_means(object):
         self.freq = kwargs.get('freq', 'annual')
         self.season = kwargs.get('season', None)
         self.tmean = kwargs.get('tmean', None)
+        self.zmean = kwargs.get('zmean', None)
         self.exp2 = kwargs.get('exp2', None)
         self.dir_path2 = kwargs.get('dir_path2', None)
         self.whole = kwargs.get('whole', None)
         self.out = kwargs.get('out', None)
         self.regrid = kwargs.get('regrid', None)
+        self._rlzn = kwargs.get('realization', None)
 
+    def single_files(self):
+        with HidePrint(): 
+            df = search_dir(dir_path=self.dir_path, variable=self._var, \
+                model=self._mod, experiment=self._exp).specific_data()
+            if self.exp2 != None:
+                if self.dir_path2 == None:
+                    self.dir_path2 = self.dir_path
+                df2 = search_dir(dir_path=self.dir_path2, variable=self._var, \
+                                 model=self._mod, experiment=self.exp2).specific_data()
+                if df2.empty:
+                    print('\nNo experiment',self.exp2,'found in',self.dir_path2)
+                    raise SystemExit
+        if self.extVar!=None:
+            var = self.extVar
+        else:
+            var = df['variable_id'].unique()
+        if self.extExp!=None:
+            exp = self.extExp
+        else:
+            exp = df['experiment_id'].unique()
+        if self.extMod!=None:
+            mod = self.extMod
+        else:
+            mod = df['source_id'].unique()
+
+        ds = []
+        for v in var:
+            print('\nFor variable: ', v)
+            for m in mod:
+                print('\nFor model: ', m)
+                for e in exp:
+                    print('\nFor experiment: ', e)
+                    ds1 = _get_single_file(df,var=v,mod=m,exp=e,\
+                       nc=self.to_nc,zmean=self.zmean,\
+                       freq=self.freq,season=self.season,tmean=self.tmean, \
+                       regrid=self.regrid,curve=self.curve,realization=self._rlzn)
+
+                    ds.append(ds1)
+        return ds
+    
+    def realizations(self):
+        with HidePrint(): 
+            df = search_dir(dir_path=self.dir_path, variable=self._var, \
+                model=self._mod, experiment=self._exp).specific_data()
+            if self.exp2 != None:
+                if self.dir_path2 == None:
+                    self.dir_path2 = self.dir_path
+                df2 = search_dir(dir_path=self.dir_path2, variable=self._var, \
+                                 model=self._mod, experiment=self.exp2).specific_data()
+                if df2.empty:
+                    print('\nNo experiment',self.exp2,'found in',self.dir_path2)
+                    raise SystemExit
+        if self.extVar!=None:
+            var = self.extVar
+        else:
+            var = df['variable_id'].unique()
+        if self.extExp!=None:
+            exp = self.extExp
+        else:
+            exp = df['experiment_id'].unique()
+        if self.extMod!=None:
+            mod = self.extMod
+        else:
+            mod = df['source_id'].unique()
+
+        ds = []
+        for v in var:
+            print('\nFor variable: ', v)
+            for m in mod:
+                print('\nFor model: ', m)
+                if self.exp2 != None:
+                    ds1 = _get_realization(df,var=v,mod=m,exp=exp[0],\
+                       init=self.init,end=self.end,nc=None,\
+                       freq=self.freq,season=self.season,tmean=self.tmean,exdf2=df2, \
+                       regrid=self.regrid,curve=self.curve)
+                    ds2 = _get_realization(df2,var=v,mod=m,exp=self.exp2,\
+                       init=self.init,end=self.end,nc=None,\
+                       freq=self.freq,season=self.season,tmean=self.tmean,exdf2=df, \
+                       regrid=self.regrid,curve=self.curve)
+                    ds1 = concat_data(ds1,ds2,nc='no')._cExp()
+                    with ProgressBar():
+                        if (self.init != None) or (self.end != None):
+                            ds1.load().to_netcdf(v+'_rm_'+m+'_'+exp[0]+'_RM_'+str(self.init)+'-'+str(self.end)+'.nc')
+                        else:
+                            ds1.load().to_netcdf(v+'_rm_'+m+'_'+exp[0]+'_RM_.nc')
+                else:
+                    for e in exp:
+                        print('\nFor experiment: ', e)
+                        ds1 = _get_realization(df,var=v,mod=m,exp=e,\
+                           init=self.init,end=self.end,nc=self.to_nc,\
+                           freq=self.freq,season=self.season,tmean=self.tmean, \
+                           regrid=self.regrid,curve=self.curve)
+
+                ds.append(ds1)
+        return ds
+    
     def real_mean(self):
         with HidePrint(): 
             df = search_dir(dir_path=self.dir_path, variable=self._var, \
@@ -305,19 +509,24 @@ class get_means(object):
                     ds1 = _get_rm(df,var=v,mod=m,exp=exp[0],\
                        init=self.init,end=self.end,nc=None,\
                        freq=self.freq,season=self.season,tmean=self.tmean,exdf2=df2, \
-                       regrid=self.regrid,curve=self.curve)
+                       regrid=self.regrid,curve=self.curve,realization=self._rlzn)
                     ds2 = _get_rm(df2,var=v,mod=m,exp=self.exp2,\
                        init=self.init,end=self.end,nc=None,\
                        freq=self.freq,season=self.season,tmean=self.tmean,exdf2=df, \
-                       regrid=self.regrid,curve=self.curve)
+                       regrid=self.regrid,curve=self.curve,realization=self._rlzn)
                     ds1 = concat_data(ds1,ds2,nc='no')._cExp()
+                    with ProgressBar():
+                        if (self.init != None) or (self.end != None):
+                            ds1.load().to_netcdf(v+'_rm_'+m+'_'+exp[0]+'_RM_'+str(self.init)+'-'+str(self.end)+'.nc')
+                        else:
+                            ds1.load().to_netcdf(v+'_rm_'+m+'_'+exp[0]+'_RM_.nc')
                 else:
                     for e in exp:
                         print('\nFor experiment: ', e)
                         ds1 = _get_rm(df,var=v,mod=m,exp=e,\
                            init=self.init,end=self.end,nc=self.to_nc,\
                            freq=self.freq,season=self.season,tmean=self.tmean, \
-                           regrid=self.regrid,curve=self.curve)
+                           regrid=self.regrid,curve=self.curve,realization=self._rlzn)
 
                 ds.append(ds1)
         return ds
@@ -356,7 +565,10 @@ class get_means(object):
         if self.to_nc != None:
             with ProgressBar():
                 if self.out !=None:
-                    ds_mean.load().to_netcdf(self.out)
+                    if self.whole!=None:
+                        ds.load().to_netcdf(self.out)
+                    else:
+                        ds_mean.load().to_netcdf(self.out)
                 else:
                     if (self.init != None) or (self.end != None):
                         if self.whole!=None:
