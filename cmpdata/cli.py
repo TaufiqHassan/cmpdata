@@ -108,11 +108,15 @@ def main():
             data.extExp=experiment
         data.get_rm()
     elif output == 'mm':
-        data = get_data(dir_path=search_dir,variable=variable,experiment=experiment,\
+        data = get_data(dir_path=search_dir,\
                  init=init,end=end,regrid=regrid, \
                  freq=freq,season=season,tmean=tmean,rm=rm,curve=curve,whole=w,out=out)
         if (model != None):
             data.extMod=model
+        if (variable != None):
+            data.extVar=variable
+        if (experiment != None):
+            data.extExp=experiment
         data.get_mm()
     elif output == 'stats':
         try:
@@ -130,7 +134,7 @@ def main():
             if astat[0][1] == 'modAnom':
                 data_resample(fname=astat[0][0],var=variable,out=out,modAnom = 'modAnom',init=init,end=end)._mod_mean()
             if astat[0][1] == 'tANN':
-                data_resample(fname=astat[0][0],var=variable,out=out)._tmean()
+                data_resample(fname=astat[0][0],var=variable,out=out,season=season)._tmean()
             if astat[0][1] == 'tDJF':
                 data_resample(fname=astat[0][0],var=variable,out=out,season='DJF')._tmean()
             if astat[0][1] == 'tMAM':

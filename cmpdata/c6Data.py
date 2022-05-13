@@ -77,7 +77,7 @@ class get_data(object):
     def get_sfs(self):
         r = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
                          extMod=self._extMod,extExp=self._extExp,extVar=self._extVar,\
-                         nc=self.to_nc,\
+                         nc=self.to_nc,init=self.init,end=self.end,\
                          freq=self.freq,season=self.season,tmean=self.tmean,zmean=self.zmean,\
                          regrid=self.regrid,curve=self.curve,realization=self._rlzn).single_files()
         return r
@@ -102,7 +102,7 @@ class get_data(object):
     
     def get_mm(self):
         mm = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
-                         extMod=self._extMod,regrid=self.regrid, \
+                         extMod=self._extMod,extExp=self._extExp,extVar=self._extVar,regrid=self.regrid, \
                          init=self.init,end=self.end,nc=self.to_nc,curve=self.curve,\
                          rm=self._rm,freq=self.freq,season=self.season,tmean=self.tmean,whole=self.whole,out=self.out).model_mean()
         return mm

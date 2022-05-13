@@ -188,7 +188,7 @@ def _get_rm(df,mod,var,exp,realization=None,init=None,end=None,nc=None,tmean=Non
         else:
             rlzn = df['realization'][df.source_id == mod].unique()
     else:
-        rlzn=[realization]
+        rlzn=realization.split(',')
     print('\nAvailable realizations:', rlzn)
     ds_r=[0]*len(rlzn)
     m=0
@@ -226,7 +226,7 @@ def _get_rm(df,mod,var,exp,realization=None,init=None,end=None,nc=None,tmean=Non
                 ds.load().to_netcdf(var+'_rm_'+mod+'_'+exp+'_RM_.nc')
     return ds
 
-def _get_single_file(df,mod,var,exp,realization=None,nc=None,tmean=None,zmean=None,freq='annual',season=None,curve=None,regrid=None):
+def _get_single_file(df,mod,var,exp,realization=None,init=None,end=None,nc=None,tmean=None,zmean=None,freq='annual',season=None,curve=None,regrid=None):
     print('\ncalculating for model: ', mod)
     if realization!=None:
         uri = df[(df.source_id == mod) & (df.experiment_id == exp) & (df.variable_id == var) & (df.realization == realization)]['data'].values
@@ -237,7 +237,10 @@ def _get_single_file(df,mod,var,exp,realization=None,nc=None,tmean=None,zmean=No
         try:
             print(uri[i])
             if (not os.path.exists(str(uri[i]).split('/')[-1][:-3]+'_pp.nc')):
-                ds_rr = xr.open_mfdataset(str(uri[i])[:-3]+'*', combine='by_coords')
+                if (init != None) or (end != None):
+                    ds_rr = xr.open_mfdataset(str(uri[i])[:-3]+'*', combine='by_coords').sel(time=slice(str(init),str(end)))
+                else:
+                    ds_rr = xr.open_mfdataset(str(uri[i])[:-3]+'*', combine='by_coords')
                 ds = ds_rr[var]
                 print('\nData shape:',ds.shape)
                 if tmean != None:
@@ -412,7 +415,7 @@ class get_means(object):
                 for e in exp:
                     print('\nFor experiment: ', e)
                     ds1 = _get_single_file(df,var=v,mod=m,exp=e,\
-                       nc=self.to_nc,zmean=self.zmean,\
+                       nc=self.to_nc,init=self.init,end=self.end,zmean=self.zmean,\
                        freq=self.freq,season=self.season,tmean=self.tmean, \
                        regrid=self.regrid,curve=self.curve,realization=self._rlzn)
 
@@ -535,51 +538,61 @@ class get_means(object):
         with HidePrint(): 
             df = search_dir(dir_path=self.dir_path, variable=self._var, \
                 model=self._mod, experiment=self._exp, rm=self._rm).specific_data()
-        var = df['variable_id'].unique()[0]
-        exp = df['experiment_id'].unique()[0]
+        if self.extVar!=None:
+            var = self.extVar
+        else:
+            var = df['variable_id'].unique()
+        if self.extExp!=None:
+            exp = self.extExp
+        else:
+            exp = df['experiment_id'].unique()
         if self.extMod!=None:
             mod = self.extMod
         else:
             mod = df['source_id'].unique()
 
         ds_m = []
-        for m in mod:
-            print('\nFor model: ', m)
-            dr = _get_rm(df,var=var,mod=m,exp=exp,\
-                   init=self.init,end=self.end,freq=self.freq,\
-                   season=self.season,tmean=self.tmean)
-            if self.regrid != 'off':
-                if self.curve != None:
-                    ds_m.append(_curv_regrid(dr))
-                else:
-                    ds_m.append(_rect_regrid(dr))
-            else:
-                ds_m.append(dr)
-        time = ds_m[0]['time'].values
-        for zz in range(len(ds_m)):
-            ds_m[zz]['time'] = time
-        ds = xr.concat(ds_m,dim='ens')
-        ds_mean=ds.mean(dim='ens')
-        print('\nEnsemble data shape:',ds_mean.shape)
-        ds_mean.name = var
-        if self.to_nc != None:
-            with ProgressBar():
-                if self.out !=None:
-                    if self.whole!=None:
-                        ds.load().to_netcdf(self.out)
-                    else:
-                        ds_mean.load().to_netcdf(self.out)
-                else:
-                    if (self.init != None) or (self.end != None):
-                        if self.whole!=None:
-                            ds.load().to_netcdf(var+'_ens_ModMean_'+exp+'_MM_'+str(self.init)+'-'+str(self.end)+'.nc')
+        for e in exp:
+            print('\nFor variable: ', e)
+            for v in var:
+                print('\nFor model: ', v)
+                for m in mod:
+                    print('\nFor experiment: ', m)
+                    dr = _get_rm(df,var=v,mod=m,exp=e,\
+                           init=self.init,end=self.end,freq=self.freq,\
+                           season=self.season,tmean=self.tmean)
+                    if self.regrid != 'off':
+                        if self.curve != None:
+                            ds_m.append(_curv_regrid(dr))
                         else:
-                            ds_mean.load().to_netcdf(var+'_mm_ModMean_'+exp+'_MM_'+str(self.init)+'-'+str(self.end)+'.nc')
+                            ds_m.append(_rect_regrid(dr))
                     else:
-                        if self.whole!=None:
-                            ds.load().to_netcdf(var+'_ens_ModMean_'+exp+'_MM_.nc')
+                        ds_m.append(dr)
+                    time = ds_m[0]['time'].values
+                    for zz in range(len(ds_m)):
+                        ds_m[zz]['time'] = time
+                ds = xr.concat(ds_m,dim='ens')
+                ds_mean=ds.mean(dim='ens')
+                print('\nEnsemble data shape:',ds_mean.shape)
+                ds_mean.name = v
+                if self.to_nc != None:
+                    with ProgressBar():
+                        if self.out !=None:
+                            if self.whole!=None:
+                                ds.load().to_netcdf(self.out)
+                            else:
+                                ds_mean.load().to_netcdf(self.out)
                         else:
-                            ds_mean.load().to_netcdf(var+'_mm_ModMean_'+exp+'_MM_.nc')
+                            if (self.init != None) or (self.end != None):
+                                if self.whole!=None:
+                                    ds.load().to_netcdf(v+'_ens_ModMean_'+e+'_MM_'+str(self.init)+'-'+str(self.end)+'.nc')
+                                else:
+                                    ds_mean.load().to_netcdf(v+'_mm_ModMean_'+e+'_MM_'+str(self.init)+'-'+str(self.end)+'.nc')
+                            else:
+                                if self.whole!=None:
+                                    ds.load().to_netcdf(v+'_ens_ModMean_'+e+'_MM_.nc')
+                                else:
+                                    ds_mean.load().to_netcdf(v+'_mm_ModMean_'+e+'_MM_.nc')
         return ds_mean
 
 def _mod_help():
