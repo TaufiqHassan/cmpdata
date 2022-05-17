@@ -1,11 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Aug 26 17:57:21 2020
-
-@author: Taufiq
-"""
-
 from cmpdata.file_system_util import search_dir, get_means
+from cmpdata.c6Stats import data_resample
 
 class get_data(object): 
     
@@ -19,92 +13,100 @@ class get_data(object):
         self.to_nc = kwargs.get('nc', 'yes')
         self.init = kwargs.get('init', None)
         self.end = kwargs.get('end', None)
-        self._extMod = kwargs.get('extMod', None)
-        self._extExp = kwargs.get('extExp', None)
-        self._extVar = kwargs.get('extVar', None)
         self.curve = kwargs.get('curve', None)
         self.freq = kwargs.get('freq', 'annual')
         self.season = kwargs.get('season', None)
         self.tmean = kwargs.get('tmean', None)
-        self.zmean = kwargs.get('zmean', None)
-        self.exp2 = kwargs.get('exp2', None)
-        self.dir_path2 = kwargs.get('dir_path2', None)
         self.whole = kwargs.get('whole', None)
+        self.fname = kwargs.get('fname', None)
+        self.modMean = kwargs.get('modMean', None)
+        self.modStd = kwargs.get('modStd', None)
+        self.monClim = kwargs.get('monClim', None)
+        self.monAnom = kwargs.get('monAnom', None)
+        self.modAnom = kwargs.get('modAnom', None)
+        self.trend = kwargs.get('trend', None)
+        self.aggr = kwargs.get('aggr', None)
+        self.zonMean = kwargs.get('zonMean', None)
+        self.ci = kwargs.get('ci', 0.95)
         self.out = kwargs.get('out', None)
         self.regrid = kwargs.get('regrid', None)
         
     @property
-    def extMod(self):
-        return self._extMod
+    def model(self):
+        return self._mod
 
-    @extMod.setter
-    def extMod(self, val):
-        self._extMod=[0]
+    @model.setter
+    def model(self, val):
+        self._mod=[0]
         mods = [x.strip() for x in val.split(',')]
         for zz in range(len(mods)):
-            self._extMod.append(mods[zz])
-        self._extMod.remove(0)
+            self._mod.append(mods[zz])
+        self._mod.remove(0)
 
     @property
-    def extExp(self):
-        return self._extExp
+    def experiment(self):
+        return self._exp
 
-    @extExp.setter
-    def extExp(self, val):
-        self._extExp = [0]
+    @experiment.setter
+    def experiment(self, val):
+        self._exp = [0]
         exps = [x.strip() for x in val.split(',')]
         for zz in range(len(exps)):
-            self._extExp.append(exps[zz])
-        self._extExp.remove(0)
+            self._exp.append(exps[zz])
+        self._exp.remove(0)
             
     @property
-    def extVar(self):
-        return self._extVar
+    def variable(self):
+        return self._var
 
-    @extVar.setter
-    def extVar(self, val):
-        self._extVar = [0]
+    @variable.setter
+    def variable(self, val):
+        self._var = [0]
         vars = [x.strip() for x in val.split(',')]
         for zz in range(len(vars)):
-            self._extVar.append(vars[zz])
-        self._extVar.remove(0)
+            self._var.append(vars[zz])
+        self._var.remove(0)
+        
+    @property
+    def realization(self):
+        return self._rlzn
+
+    @realization.setter
+    def realization(self, val):
+        self._rlzn = [0]
+        rlzns = [x.strip() for x in val.split(',')]
+        for zz in range(len(rlzns)):
+            self._rlzn.append(rlzns[zz])
+        self._rlzn.remove(0)
+
 
     def get_info(self):
-        info = search_dir(dir_path=self.dir_path,variable=self._var,model=self._mod,\
+        info = search_dir(dir_path=self.dir_path,model=self._mod,variable=self._var,\
                           experiment=self._exp,realization=self._rlzn,rm=self._rm).specific_data()
         return info
-    
-    def get_sfs(self):
-        r = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
-                         extMod=self._extMod,extExp=self._extExp,extVar=self._extVar,\
-                         nc=self.to_nc,init=self.init,end=self.end,\
-                         freq=self.freq,season=self.season,tmean=self.tmean,zmean=self.zmean,\
-                         regrid=self.regrid,curve=self.curve,realization=self._rlzn).single_files()
-        return r
-    
-    def get_realizations(self):
-        r = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
-                         extMod=self._extMod,extExp=self._extExp,extVar=self._extVar,\
-                         init=self.init,end=self.end,nc=self.to_nc,\
-                         freq=self.freq,season=self.season,tmean=self.tmean,\
-                         exp2=self.exp2,dir_path2=self.dir_path2, \
-                         regrid=self.regrid,curve=self.curve).realizations()
-        return r
-    
+            
     def get_rm(self):
-        rm = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
-                         extMod=self._extMod,extExp=self._extExp,extVar=self._extVar,\
-                         init=self.init,end=self.end,nc=self.to_nc,\
-                         freq=self.freq,season=self.season,tmean=self.tmean,\
-                         exp2=self.exp2,dir_path2=self.dir_path2, \
-                         regrid=self.regrid,curve=self.curve,realization=self._rlzn).real_mean()
+        rm = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, \
+                       experiment=self._exp, realization=self._rlzn,\
+                       init=self.init,end=self.end,nc=self.to_nc,\
+                       freq=self.freq,season=self.season,tmean=self.tmean,\
+                       regrid=self.regrid, curve=self.curve).real_mean()
         return rm
     
     def get_mm(self):
-        mm = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, experiment=self._exp,\
-                         extMod=self._extMod,extExp=self._extExp,extVar=self._extVar,regrid=self.regrid, \
-                         init=self.init,end=self.end,nc=self.to_nc,curve=self.curve,\
-                         rm=self._rm,freq=self.freq,season=self.season,tmean=self.tmean,whole=self.whole,out=self.out).model_mean()
+        mm = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, \
+                       experiment=self._exp,regrid=self.regrid,init=self.init,\
+                       end=self.end,nc=self.to_nc,curve=self.curve,rm=self._rm,\
+                       freq=self.freq,season=self.season,tmean=self.tmean,\
+                       whole=self.whole,out=self.out,realization=self._rlzn).model_mean()
         return mm
 
+    def get_stats(self):
+        r = data_resample(fname=self.fname,season=self.season,var=self._var,\
+                          nc=self.to_nc,freq=self.freq,tmean=self.tmean,\
+                          modMean=self.modMean,modStd=self.modStd,monClim=self.monClim,\
+                          monAnom=self.monAnom,modAnom=self.modAnom,out=self.out,\
+                          init=self.init,end=self.end,trend=self.trend,aggr=self.aggr,\
+                          ci=self.ci,regrid=self.regrid)._mod_mean()
+        return r
 

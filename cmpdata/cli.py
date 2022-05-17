@@ -1,13 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Sep  7 14:40:38 2020
-
-@author: Taufiq
-"""
 import argparse
 
 from cmpdata.c6Data import get_data
-from cmpdata.file_system_util import _check_list, _mod_help
+from cmpdata.utils import _check_list
 from cmpdata.c6Stats import data_resample
 
 import warnings
@@ -21,139 +15,105 @@ def main():
 
     parser.error=myerror
 
-    parser.add_argument("-o","--output-options", help="Select an output option", choices=['info', 'sf', 'r', 'rm', 'mm','stats'], required=True)
+    parser.add_argument("-o","--output-options", help="Select an output option", choices=['info', 'rm', 'mm','stats'], required=True)
     parser.add_argument("-dir", help="Select directory.", default=None)
-    parser.add_argument("-dir2", help="Select directory for the second experiment", default=None)
     parser.add_argument("-m", help="Model names", default=None)
     parser.add_argument("-e", help="Experiment names", default=None)
     parser.add_argument("-v", help="Variable names", default=None)
     parser.add_argument("-r", help="Realization", default=None)
     parser.add_argument("-out", help="Output file name", default=None)
-    parser.add_argument('stats',action='append',nargs=2,help=argparse.SUPPRESS,default=None)
-    
+    parser.add_argument("-f", help="Input filenames for stats", default=None)    
     parser.add_argument("-init", help="Initial year", default=None)
     parser.add_argument("-end", help="Ending year", default=None)
-    parser.add_argument("-e2", help="Secondary experiment name", default=None)
-    parser.add_argument("-t", help="Temporal mean option", action='store_true', default=None)
-    parser.add_argument("-z", help="Zonal mean option", action='store_true', default=None)
+    parser.add_argument("-t", help="Temporal mean option", action='append_const', default=None, const='yes')
+    parser.add_argument("-z", help="Zonal mean option", action='append_const', default=None, const='yes')
     parser.add_argument("-s", help="Seasonal mean option", default=None)
-    parser.add_argument("-f", help="Temporal mean frequency", choices=['annual','daily','monthly'] ,default='annual')
+    parser.add_argument("-mm", help="Calculate model ensemble mean", action='store_true', default=None)
+    parser.add_argument("-std", help="Calculate model std", action='store_true', default=None)
+    parser.add_argument("-clim", help="Calculate monthly climatology", action='store_true', default=None)
+    parser.add_argument("-anom", help="Calculate monthly anomaly", action='store_true', default=None)
+    parser.add_argument("-manom", help="Calculate model anomaly", action='store_true', default=None)
+    parser.add_argument("-trend", help="Calculate variable grid-by-grid trends", action='store_true', default=None)
+    parser.add_argument("-aggr", help="Calculate model aggreement", action='store_true', default=None)
+    parser.add_argument("-freq", help="Temporal mean frequency", choices=['annual','daily','monthly'] ,default='annual')
     parser.add_argument("-rm", help="Use the realization means", action='store_true', default=None)
     parser.add_argument("-curve", help="Regridding to curvilinear grids", action='store_true', default=None)
-    parser.add_argument("-w", help="Get all model means a single file (used for certain statistical analysis later)", action='store_true', default=None)
-    parser.add_argument("-ci", help="confidence interval used in stats", default=0.95)
-    parser.add_argument("-regrid", help="regridding on/off", default=None)
+    parser.add_argument("-w", help="All model means as ens dim (used by -std, -mm, -aggr stats options)", action='store_true', default=None)
+    parser.add_argument("-ci", help="confidence interval used in -trend and -aggr options", default=0.95)
+    parser.add_argument("-regrid", help="regridding on/off", action='store_true', default=None)
     
     args = parser.parse_args()
     search_dir = args.dir
-    d2 = args.dir2
-    model = _check_list(args.m)
-    variable = _check_list(args.v)
-    experiment = _check_list(args.e)
-    exp2 = args.e2
+    mod = _check_list(args.m)
+    var = _check_list(args.v)
+    exp = _check_list(args.e)
     realization = args.r
     init = args.init
     end = args.end
-    freq = args.f
+    freq = args.freq
     season = args.s
     tmean = args.t
     zmean = args.z
+    fname = args.f
     rm = args.rm
+    mm = args.mm
+    std = args.std
+    clim = args.clim
+    anom = args.anom
+    manom = args.manom
+    trend = args.trend
+    aggr = args.aggr
     curve = args.curve
     w = args.w
     out = args.out
-    astat = args.stats
     ci = args.ci
     regrid = args.regrid
     
     output = args.output_options
         
     if output == 'info':
-        get_data(dir_path=search_dir,model=model,variable=variable,\
-                 experiment=experiment,realization=realization,rm=rm).get_info()
-    elif output == 'sf':
-        data = get_data(dir_path=search_dir,\
-                 init=init,end=end,\
-                 exp2=exp2,dir_path2=d2,\
-                 freq=freq,season=season,tmean=tmean,zmean=zmean,curve=curve,regrid=regrid,realization=realization)
-        if (model != None):
-            data.extMod=model
-        if (variable != None):
-            data.extVar=variable
-        if (experiment != None):
-            data.extExp=experiment
-        data.get_sfs()
-    elif output == 'r':
-        data = get_data(dir_path=search_dir,\
-                 init=init,end=end,\
-                 exp2=exp2,dir_path2=d2,\
-                 freq=freq,season=season,tmean=tmean,curve=curve,regrid=regrid)
-        if (model != None):
-            data.extMod=model
-        if (variable != None):
-            data.extVar=variable
-        if (experiment != None):
-            data.extExp=experiment
-        data.get_realizations()
+        data = get_data(dir_path=search_dir,rm=rm)
+        if (var != None):
+            data.variable=var
+        if (mod != None):
+            data.model=mod
+        if (exp != None):
+            data.experiment=exp
+        if (realization != None):
+            data.realization=realization
+        data.get_info()
     elif output == 'rm':
-        data = get_data(dir_path=search_dir,\
-                 init=init,end=end,\
-                 exp2=exp2,dir_path2=d2,\
-                 freq=freq,season=season,tmean=tmean,curve=curve,regrid=regrid,realization=realization)
-        if (model != None):
-            data.extMod=model
-        if (variable != None):
-            data.extVar=variable
-        if (experiment != None):
-            data.extExp=experiment
+        data = get_data(dir_path=search_dir,init=init,end=end,\
+                        freq=freq,season=season,tmean=tmean,curve=curve,regrid=regrid)
+        if (var != None):
+            data.variable=var
+        if (mod != None):
+            data.model=mod
+        if (exp != None):
+            data.experiment=exp
+        if (realization != None):
+            data.realization=realization
         data.get_rm()
     elif output == 'mm':
         data = get_data(dir_path=search_dir,\
                  init=init,end=end,regrid=regrid, \
                  freq=freq,season=season,tmean=tmean,rm=rm,curve=curve,whole=w,out=out)
-        if (model != None):
-            data.extMod=model
-        if (variable != None):
-            data.extVar=variable
-        if (experiment != None):
-            data.extExp=experiment
+        if (var != None):
+            data.variable=var
+        if (mod != None):
+            data.model=mod
+        if (exp != None):
+            data.experiment=exp
+        if (realization != None):
+            data.realization=realization
         data.get_mm()
     elif output == 'stats':
-        try:
-            print('\nSelected stat option:',astat[0][1])
-            if astat[0][1] == 'modMean':
-                data_resample(fname=astat[0][0],var=variable,out=out,modMean = 'modMean')._mod_mean()
-            if astat[0][1] == 'zonMean':
-                data_resample(fname=astat[0][0],var=variable,out=out,zonMean = 'zonMean')._mod_mean()
-            if astat[0][1] == 'modStd':
-                data_resample(fname=astat[0][0],var=variable,out=out,modStd = 'modStd')._mod_mean()
-            if astat[0][1] == 'monClim':
-                data_resample(fname=astat[0][0],var=variable,out=out,monClim = 'monClim')._mod_mean()
-            if astat[0][1] == 'monAnom':
-                data_resample(fname=astat[0][0],var=variable,out=out,monAnom = 'monAnom')._mod_mean()
-            if astat[0][1] == 'modAnom':
-                data_resample(fname=astat[0][0],var=variable,out=out,modAnom = 'modAnom',init=init,end=end)._mod_mean()
-            if astat[0][1] == 'tANN':
-                data_resample(fname=astat[0][0],var=variable,out=out,season=season)._tmean()
-            if astat[0][1] == 'tDJF':
-                data_resample(fname=astat[0][0],var=variable,out=out,season='DJF')._tmean()
-            if astat[0][1] == 'tMAM':
-                data_resample(fname=astat[0][0],var=variable,out=out,season='MAM')._tmean()
-            if astat[0][1] == 'tJJA':
-                data_resample(fname=astat[0][0],var=variable,out=out,season='JJA')._tmean()
-            if astat[0][1] == 'tSON':
-                data_resample(fname=astat[0][0],var=variable,out=out,season='SON')._tmean()
-            if astat[0][1] == 'tmon':
-                data_resample(fname=astat[0][0],var=variable,out=out,freq='monthly')._tmean()
-            if astat[0][1] == 'tday':
-                data_resample(fname=astat[0][0],var=variable,out=out,freq='daily')._tmean()
-            if astat[0][1] == 'trend':
-                data_resample(fname=astat[0][0],var=variable,trend='trend',out=out,init=init,end=end,ci=ci)._mod_mean()
-            if astat[0][1] == 'modAggr':
-                print('\nThis may take some time . . .')
-                data_resample(fname=astat[0][0],var=variable,aggr='aggr',out=out,init=init,end=end,ci=ci)._mod_mean()
-        except:
-            _mod_help()
+        data = data_resample(fname=fname,zonMean=zmean,dir_path=search_dir,\
+                 freq=freq,init=init,end=end,regrid=regrid,modMean=mm,modStd=std, \
+                 season=season,tmean=tmean,monAnom=anom,curve=curve,monClim=clim,\
+                 modAnom=manom,out=out,ci=ci,trend=trend,aggr=aggr,variable=var)
+        data._mod_mean()
+
     
 
 

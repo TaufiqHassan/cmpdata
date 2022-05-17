@@ -1,15 +1,9 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Aug 30 01:48:57 2020
-
-@author: Taufiq
-"""
-
 import xarray as xr
 from dask.diagnostics import ProgressBar
 from scipy import stats
 import numpy as np
 
+from cmpdata.utils import _regrid
 
 def do_ttest(x,ci=0.95):
     rgr= stats.linregress(np.r_[1:len(x)+1],x)
@@ -20,6 +14,9 @@ def do_ttest(x,ci=0.95):
     return (trnd, tsig, ci )
 
 def trend_calc(var,init,end,ci=0.95):
+    var = var.sel(time=slice(str(init),str(end)))
+    init = 0
+    end = len(var.time)
     tru = np.ma.masked_all(var.shape[1:])
     var=var.values
     for yy in range(tru.shape[0]):
@@ -29,7 +26,7 @@ def trend_calc(var,init,end,ci=0.95):
                 m,s,c=do_ttest(var[init:end,yy,xx],ci=ci)
             else:
                 m,s,c=do_ttest(var[init:end,yy,xx][mask],ci=ci)
-            tru.data[yy,xx]=m
+            tru.data[yy,xx]= m
             tru.mask[yy,xx]= s
     return tru.data, tru.mask
 
@@ -48,9 +45,10 @@ class data_resample(object):
     def __init__(self,fname,**kwargs):
         self.fname = fname
         self.season = kwargs.get('season', None)
-        self._var = kwargs.get('var', None)
+        self._var = kwargs.get('variable', None)
         self.nc = kwargs.get('nc', 'yes')
         self.freq = kwargs.get('freq', 'annual')
+        self.tmean = kwargs.get('tmean', None)
         self.modMean = kwargs.get('modMean', None)
         self.modStd = kwargs.get('modStd', None)
         self.monClim = kwargs.get('monClim', None)
@@ -63,6 +61,7 @@ class data_resample(object):
         self.aggr = kwargs.get('aggr', None)
         self.zonMean = kwargs.get('zonMean', None)
         self.ci = kwargs.get('ci', 0.95)
+        self.regrid = kwargs.get('regrid', None)
         
     def _tmean(self):
         SeaMon = {'DJF':[12,1,2],'MAM':[3,4,5],'JJA':[6,7,8],'SON':[9,10,11]}
@@ -96,22 +95,12 @@ class data_resample(object):
                 data = data.rename({'year':'time'})
         else:
             try:
-                data = data.resample(time="1AS").mean(dim='time')
+                data = data.resample(time="1AS",restore_coord_dims=True).mean(dim='time')
             except:
                 data = data.groupby('time.year').mean('time')
                 data = data.rename({'year':'time'})
         data.name = varbl
-        if self.nc == 'yes':
-            with ProgressBar():
-                if self.out !=None:
-                    data.load().to_netcdf(self.out)
-                else:
-                    try:
-                        data.load().to_netcdf(self.fname.split('.nc')[0]+'_'+self.season+'.nc')
-                    except:
-                        data.load().to_netcdf(self.fname.split('.nc')[0]+'_'+self.freq+'.nc')
-        else:
-            return data
+        return data,self.freq,self.season
         
     def _mod_mean(self):
         if type(self.fname) is str:
@@ -126,30 +115,39 @@ class data_resample(object):
         else:
             data = self.fname
             varbl = self._var
+        if self.tmean!=None:
+            dt=self._tmean()
+            data = dt[0]
+            if self.season!=None:
+                name_string = dt[2]
+            else:
+                name_string = dt[1]
+        if self.regrid!=None:
+            data=_regrid(data)
         if self.modMean != None:
             ds=data.mean(dim='ens')
             name_string = 'modMean'
         if self.zonMean != None:
             ds=data.mean(dim=data.dims[-1])
             name_string = 'zonMean'
-        elif self.modStd != None:
+        if self.modStd != None:
             ds=data.std(dim='ens')
             name_string = 'modStd'
-        elif self.monClim != None:
+        if self.monClim != None:
             ds=data.groupby('time.month').mean('time')
             name_string = 'monClim'
-        elif self.monAnom != None:
+        if self.monAnom != None:
             climatology=data.groupby('time.month').mean('time')
             ds = data.groupby('time.month') - climatology
             name_string = 'monAnom'
-        elif self.modAnom != None:
+        if self.modAnom != None:
             name_string = 'modAnom'
             if self.init!= None or self.end!=None:
                 sub=data.sel(time=slice(str(self.init),str(self.end))).mean(dim='time')
                 ds = data - sub
             else:
                 ds = data - data.mean(dim='time')
-        elif self.trend != None:
+        if self.trend != None:
             trend = trend_calc(data,int(self.init),int(self.end),ci=float(self.ci))
             t = xr.DataArray(trend[0],dims=['lat','lon'],coords={'lat':data.lat,'lon':data.lon})
             t.name = 'trend'
@@ -157,21 +155,30 @@ class data_resample(object):
             s.name = 'sig'
             ds = xr.merge([t,s])
             name_string = 'trend'
-        elif self.aggr != None:
+        if self.aggr != None:
             ds = get_aggr(data,int(self.init),int(self.end),ci=float(self.ci))
             ds.name = 'model_agreement'
             name_string = 'model_agreement'
-        if self.nc == 'yes':
+        if (self.nc == 'yes'):
             with ProgressBar():
                 if self.out !=None:
-                    ds.load().to_netcdf(self.out)
+                    try:
+                        ds.load().to_netcdf(self.out)
+                    except:
+                        data.load().to_netcdf(self.out)
                 else:
                     try:
-                        ds.load().to_netcdf(self.fname.split('.nc')[0]+'_'+name_string+'.nc')
+                        try:
+                            ds.load().to_netcdf(self.fname.split('.nc')[0]+'_'+name_string+'.nc')
+                        except:
+                            ds.load().to_netcdf(name_string+'.nc')
                     except:
-                        ds.load().to_netcdf(name_string+'.nc')
+                        try:
+                            data.load().to_netcdf(self.fname.split('.nc')[0]+'_'+name_string+'.nc')
+                        except:
+                            data.load().to_netcdf(name_string+'.nc')
         else:
-            return ds
-
-#['MIROC6', 'CESM2', 'GFDL-CM4', 'MIROC-ES2L', 'IPSL-CM6A-LR','HadGEM3-GC31-LL', 'CNRM-CM6-1', 'INM-CM5-0', 'MPI-ESM1-2-LR','CNRM-ESM2-1', 'UKESM1-0-LL', 'NESM3', 'BCC-CSM2-MR', 'NorESM2-LM','CanESM5', 'CAMS-CSM1-0', 'INM-CM4-8', 'CESM2-WACCM', 'ACCESS-CM2','MRI-ESM2-0', 'NorESM2-MM', 'ACCESS-ESM1-5', 'EC-Earth3-Veg','MPI-ESM1-2-HR']
-## mean, std, climatology, anomaly, agreement, trendmap, correlation map
+            try:
+                return ds
+            except:
+                return data
