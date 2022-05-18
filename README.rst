@@ -45,7 +45,7 @@ Usage
 ``cmpdata`` also tries to be a good command-line interface (CLI). Run ``cmpdata -h`` to see a help message with all the arguments you can pass.
 ``python cmpdata.py -h``
 
-```
+``
 usage: cmpdata.py [-h] -o {info,rm,mm,stats,ts} [-dir DIR] [-m M] [-e E] [-v V] [-r R] [-out OUT] [-f F] [-init INIT] [-end END] [-t] [-z] [-s S] [-mm]
                   [-std] [-clim] [-anom] [-manom] [-trend] [-aggr] [-freq FREQ] [-reg REG] [-rm] [-a] [-curve] [-w] [-ci CI] [-regrid]
 
@@ -80,7 +80,7 @@ options:
   -w                    All model means as ens dim (used by -std, -mm, -aggr stats options)
   -ci CI                confidence interval used in -trend and -aggr options
   -regrid               regridding on/off
-```
+``
 
 License
 -------
