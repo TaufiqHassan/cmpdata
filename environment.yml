@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - esmpy=7.1.0=py37h5ca1d4c_3
   - xesmf=0.3.0=py_0
   - dask
   - netCDF4
