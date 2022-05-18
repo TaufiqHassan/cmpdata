@@ -209,7 +209,6 @@ def get_rm_ts(path,models,variables,experiments,region='global',area_file=None):
                         area=xr.open_mfdataset(path+'/areacell*'+model+'*'+exp+'*.nc')['areacella']
                         area_files.append(area)
                     data=xr.open_mfdataset(path+'/'+var+'_rm_'+model+'_'+exp+'_RM_*.nc')[var]
-                    print(data.shape)
                     all_models.append(data)
                     av_models.append(model)
                     print(model)
