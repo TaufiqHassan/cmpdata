@@ -8,7 +8,9 @@ Pre-process CMIP6 data
 .. image:: https://img.shields.io/pypi/v/cmpdata.svg
         :target: https://pypi.python.org/pypi/cmpdata
 
-
+.. image:: https://zenodo.org/badge/295042856.svg
+   :target: https://zenodo.org/badge/latestdoi/295042856
+   
 ``cmpdata`` package can handle and analyze raw CMIP6 data.
 
 * GitHub repo: https://github.com/TaufiqHassan/cmpdata
