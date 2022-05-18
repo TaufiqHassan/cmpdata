@@ -45,42 +45,42 @@ Usage
 ``cmpdata`` also tries to be a good command-line interface (CLI). Run ``cmpdata -h`` to see a help message with all the arguments you can pass.
 ``python cmpdata.py -h``
 
-``
-usage: cmpdata.py [-h] -o {info,rm,mm,stats,ts} [-dir DIR] [-m M] [-e E] [-v V] [-r R] [-out OUT] [-f F] [-init INIT] [-end END] [-t] [-z] [-s S] [-mm]
-                  [-std] [-clim] [-anom] [-manom] [-trend] [-aggr] [-freq FREQ] [-reg REG] [-rm] [-a] [-curve] [-w] [-ci CI] [-regrid]
+::
+        usage: cmpdata.py [-h] -o {info,rm,mm,stats,ts} [-dir DIR] [-m M] [-e E] [-v V] [-r R] [-out OUT] [-f F] [-init INIT] [-end END] [-t] [-z] [-s S] [-mm]
+                          [-std] [-clim] [-anom] [-manom] [-trend] [-aggr] [-freq FREQ] [-reg REG] [-rm] [-a] [-curve] [-w] [-ci CI] [-regrid]
 
-options:
-  -h, --help            show this help message and exit
-  -o {info,rm,mm,stats,ts}, --output-options {info,rm,mm,stats,ts}
-                        Select an output option
-  -dir DIR              Select directory.
-  -m M                  Model names
-  -e E                  Experiment names
-  -v V                  Variable names
-  -r R                  Realization
-  -out OUT              Output file name
-  -f F                  Input filenames for stats
-  -init INIT            Initial year
-  -end END              Ending year
-  -t                    Temporal mean option
-  -z                    Zonal mean option
-  -s S                  Seasonal mean option
-  -mm                   Calculate model ensemble mean
-  -std                  Calculate model std
-  -clim                 Calculate monthly climatology
-  -anom                 Calculate monthly anomaly
-  -manom                Calculate model anomaly
-  -trend                Calculate variable grid-by-grid trends
-  -aggr                 Calculate model aggreement
-  -freq FREQ            Temporal mean frequency: annual/daily/monthly
-  -reg REG              Secelt region for timeseries output
-  -rm                   Use the realization means
-  -a                    Use cell areas for spatial mean calculations
-  -curve                Regridding to curvilinear grids
-  -w                    All model means as ens dim (used by -std, -mm, -aggr stats options)
-  -ci CI                confidence interval used in -trend and -aggr options
-  -regrid               regridding on/off
-``
+        options:
+          -h, --help            show this help message and exit
+          -o {info,rm,mm,stats,ts}, --output-options {info,rm,mm,stats,ts}
+                                Select an output option
+          -dir DIR              Select directory.
+          -m M                  Model names
+          -e E                  Experiment names
+          -v V                  Variable names
+          -r R                  Realization
+          -out OUT              Output file name
+          -f F                  Input filenames for stats
+          -init INIT            Initial year
+          -end END              Ending year
+          -t                    Temporal mean option
+          -z                    Zonal mean option
+          -s S                  Seasonal mean option
+          -mm                   Calculate model ensemble mean
+          -std                  Calculate model std
+          -clim                 Calculate monthly climatology
+          -anom                 Calculate monthly anomaly
+          -manom                Calculate model anomaly
+          -trend                Calculate variable grid-by-grid trends
+          -aggr                 Calculate model aggreement
+          -freq FREQ            Temporal mean frequency: annual/daily/monthly
+          -reg REG              Secelt region for timeseries output
+          -rm                   Use the realization means
+          -a                    Use cell areas for spatial mean calculations
+          -curve                Regridding to curvilinear grids
+          -w                    All model means as ens dim (used by -std, -mm, -aggr stats options)
+          -ci CI                confidence interval used in -trend and -aggr options
+          -regrid               regridding on/off
+        
 
 License
 -------
