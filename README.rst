@@ -1,5 +1,5 @@
 ===============================
-Handle CMIP6
+Pre-process CMIP6 data
 ===============================
 
 .. image:: https://img.shields.io/travis/TaufiqHassan/cmpdata.svg
