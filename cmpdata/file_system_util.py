@@ -5,7 +5,7 @@ from dask.diagnostics import ProgressBar
 from pathlib import Path
 
 from cmpdata.c6Stats import data_resample
-from cmpdata.utils import color, HidePrint, _regrid
+from cmpdata.utils import color, HidePrint, _regrid, get_rm_ts
 
 class search_dir(object):
     
@@ -162,6 +162,18 @@ class get_means(object):
         self.whole = kwargs.get('whole', None)
         self.out = kwargs.get('out', None)
         self.regrid = kwargs.get('regrid', None)
+        self.region = kwargs.get('region', 'global')
+        self.area_file = kwargs.get('area_file', None)
+
+    def time_ser(self):
+        with HidePrint(): 
+            df = search_dir(dir_path=self.dir_path, variable=self._var, \
+                model=self._mod, experiment=self._exp, realization=self._rlzn).specific_data()
+        exp = df['experiment_id'].unique()
+        var = df['variable_id'].unique()
+        mod = df['source_id'].unique()
+        get_rm_ts(self.dir_path,mod,var,exp,region=self.region,\
+                  area_file=self.area_file)
 
 
     def real_mean(self):

@@ -30,6 +30,8 @@ class get_data(object):
         self.ci = kwargs.get('ci', 0.95)
         self.out = kwargs.get('out', None)
         self.regrid = kwargs.get('regrid', None)
+        self.region = kwargs.get('region', 'global')
+        self.area_file = kwargs.get('area_file', None)
         
     @property
     def model(self):
@@ -92,6 +94,13 @@ class get_data(object):
                        freq=self.freq,season=self.season,tmean=self.tmean,\
                        regrid=self.regrid, curve=self.curve).real_mean()
         return rm
+    
+    def get_ts(self):
+        ts = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, \
+                       experiment=self._exp,region=self.region,\
+                       realization=self._rlzn,area_file=self.area_file).time_ser()
+        return ts
+
     
     def get_mm(self):
         mm = get_means(dir_path=self.dir_path, variable=self._var, model=self._mod, \
