@@ -12,7 +12,6 @@ Handle CMIP6
 ``cmpdata`` package can handle and analyze raw CMIP6 data.
 
 * GitHub repo: https://github.com/TaufiqHassan/cmpdata
-* Documentation: coming soon . . .
 
 Features
 --------
@@ -21,28 +20,20 @@ Features
 - Analyze any specific models/experiments/variables
 - Perform regridding for model ensemble means
 - Data preprocessing 
-- Statistical analysis (coming soon)
+- Statistical analysis 
 
 Installation
 ------------
 
-``cmpdata`` is installable using ``conda`` or ``pip``. Conda installation is simple as: ::
+Use the YAML file provided to create a virtual conda enviroment (genv)
 
-	conda install -c thassan cmpdata
+`conda env create -f environment.yml`
 
-For ``pip`` installation, you have to first install dependencies: ::
+And then activate cmpdata to use cmpdata
 
-    conda install -c conda-forge dask netCDF4
-    conda install -c conda-forge xesmf esmpy=7.1.0
-    pip install cmpdata
+`conda activate cmpdata`
 
-Alternatively, use the yml files in ci directory to create appropriate environement: ::
-
-    conda env create --file environment-py37.yml
-    source activate cmdata
-    pip install cmpdata
-
-Requires python v3.6 or v3.7 and supports both Mac and Linux. Windows users can use `Windows Subsystem`_.
+Supports both Mac and Linux. Windows users can use `Windows Subsystem`_.
 
 .. _`Windows Subsystem`: https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
@@ -52,33 +43,43 @@ Usage
 
 ``cmpdata`` can be used to handle and analyze raw CMIP6 data. A lot of the options available in ``acccmip6`` is available in ``cmpdata``, especially for selecting models, experiments and variables. 
 ``cmpdata`` also tries to be a good command-line interface (CLI). Run ``cmpdata -h`` to see a help message with all the arguments you can pass.
+``python cmpdata.py -h``
+'''
+usage: cmpdata.py [-h] -o {info,rm,mm,stats,ts} [-dir DIR] [-m M] [-e E] [-v V] [-r R] [-out OUT] [-f F] [-init INIT] [-end END] [-t] [-z] [-s S] [-mm]
+                  [-std] [-clim] [-anom] [-manom] [-trend] [-aggr] [-freq FREQ] [-reg REG] [-rm] [-a] [-curve] [-w] [-ci CI] [-regrid]
 
-Required Arguments
-------------------
-
-- ``-o`` : Takes output type. 
-         'info' for the files information (number of files, avaialble models, variables, experiments and realizations) in a directory,
-         'rm' for performing ensemble realization means,
-         'mm' for performing ensemble model mean and
-         'stats' for performing statistical analysis.
-
-Optional Arguments
-------------------
-
-- ``-dir`` : Selected directory
-- ``-m`` : Model names (multiple comma separated names are allowed)
-- ``-e`` : Experiment names
-- ``-v`` : Variable names
-- ``-r`` : Realizations
-- ``-init`` : Initial year selection
-- ``-end`` : Ending year selection
-- ``-e2`` : Secondary experiment name
-- ``-dir2`` : Selected directory for the second experiment
-- ``-t`` : Temporal mean option
-- ``-s`` : Seasonal mean option (use in conjunction with ``-t`` option)
-- ``-f`` : Temporal mean fequency (use in conjunction with ``-t`` option)
-- ``-rm`` : Use the realization means
-- ``-curve`` : Regridding to curvilinear grids
+options:
+  -h, --help            show this help message and exit
+  -o {info,rm,mm,stats,ts}, --output-options {info,rm,mm,stats,ts}
+                        Select an output option
+  -dir DIR              Select directory.
+  -m M                  Model names
+  -e E                  Experiment names
+  -v V                  Variable names
+  -r R                  Realization
+  -out OUT              Output file name
+  -f F                  Input filenames for stats
+  -init INIT            Initial year
+  -end END              Ending year
+  -t                    Temporal mean option
+  -z                    Zonal mean option
+  -s S                  Seasonal mean option
+  -mm                   Calculate model ensemble mean
+  -std                  Calculate model std
+  -clim                 Calculate monthly climatology
+  -anom                 Calculate monthly anomaly
+  -manom                Calculate model anomaly
+  -trend                Calculate variable grid-by-grid trends
+  -aggr                 Calculate model aggreement
+  -freq FREQ            Temporal mean frequency: annual/daily/monthly
+  -reg REG              Secelt region for timeseries output
+  -rm                   Use the realization means
+  -a                    Use cell areas for spatial mean calculations
+  -curve                Regridding to curvilinear grids
+  -w                    All model means as ens dim (used by -std, -mm, -aggr stats options)
+  -ci CI                confidence interval used in -trend and -aggr options
+  -regrid               regridding on/off
+'''
 
 License
 -------
