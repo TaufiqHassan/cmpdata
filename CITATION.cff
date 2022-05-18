@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If interested, cite it as below."
+authors:
+- family-names: "Hassan"
+  given-names: "Taufiq"
+  orcid: "0000-0003-2361-6361"
+title: "cmpdata: A Python based CMIP6 data pre-processor"
+version: 2.0.0
+doi: 10.5281/zenodo.6559072
+date-released: 2022-05-18
+url: "https://github.com/TaufiqHassan/cmpdata"
