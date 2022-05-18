@@ -43,10 +43,11 @@ Usage
 
 ``cmpdata`` can be used to handle and analyze raw CMIP6 data. A lot of the options available in ``acccmip6`` is available in ``cmpdata``, especially for selecting models, experiments and variables. 
 ``cmpdata`` also tries to be a good command-line interface (CLI). Run ``cmpdata -h`` to see a help message with all the arguments you can pass.
-``python cmpdata.py -h``
+
+``python cmpdata.py -h`` ::
 
         usage: cmpdata.py [-h] -o {info,rm,mm,stats,ts} [-dir DIR] [-m M] [-e E] [-v V] [-r R] [-out OUT] [-f F] [-init INIT] [-end END] [-t] [-z] [-s S] [-mm]
-          [-std] [-clim] [-anom] [-manom] [-trend] [-aggr] [-freq FREQ] [-reg REG] [-rm] [-a] [-curve] [-w] [-ci CI] [-regrid]
+        [-std] [-clim] [-anom] [-manom] [-trend] [-aggr] [-freq FREQ] [-reg REG] [-rm] [-a] [-curve] [-w] [-ci CI] [-regrid]
 
         options:
         -h, --help            show this help message and exit
@@ -79,7 +80,7 @@ Usage
         -w                    All model means as ens dim (used by -std, -mm, -aggr stats options)
         -ci CI                confidence interval used in -trend and -aggr options
         -regrid               regridding on/off
-        
+
 
 License
 -------
