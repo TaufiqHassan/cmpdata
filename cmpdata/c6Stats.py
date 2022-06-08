@@ -40,6 +40,13 @@ def get_aggr(var,init,end,ci=0.95):
     tru=(tru/len(var))*100
     return tru    
 
+def smean(data):
+    month_length = data.time.dt.days_in_month
+    weights = (month_length.groupby("time.season") / month_length.groupby("time.season").sum())
+    np.testing.assert_allclose(weights.groupby("time.season").sum().values, np.ones(4))
+    seasons = (data * weights).groupby("time.season").sum(dim="time")
+    return seasons
+
 class data_resample(object):
     
     def __init__(self,fname,**kwargs):
@@ -83,15 +90,19 @@ class data_resample(object):
             data = data.resample(time="1D").mean(dim='time')
         elif self.season != None:
             try:
-                data_sea = data.where(data['time.month'] == int(self.season))
-                data = data_sea.groupby('time.year').mean('time')
-                data = data.rename({'year':'time'})
+                seaInd = {'DJF':0,'MAM':2,'JJA':1,'SON':3}
+                data = smean(data)[seaInd[self.season]]
             except:
-                data_sea = data.where((data['time.month'] == SeaMon[self.season][0]) | \
-                                      (data['time.month'] == SeaMon[self.season][1]) | \
-                                      (data['time.month'] == SeaMon[self.season][2]))
-                data_sea = data_sea.rolling(min_periods=3, center=True, time=3).mean()
-                data = data_sea.groupby('time.year').mean('time')
+                try:
+                    data_sea = data.where(data['time.season'] == self.season)
+                    data = data_sea.groupby('time.year').mean('time')
+                    data = data.rename({'year':'time'})
+                except:
+                    data_sea = data.where((data['time.month'] == SeaMon[self.season][0]) | \
+                                          (data['time.month'] == SeaMon[self.season][1]) | \
+                                          (data['time.month'] == SeaMon[self.season][2]))
+                    data_sea = data_sea.rolling(min_periods=3, center=True, time=3).mean()
+                    data = data_sea.groupby('time.year').mean('time')
                 data = data.rename({'year':'time'})
         else:
             try:
