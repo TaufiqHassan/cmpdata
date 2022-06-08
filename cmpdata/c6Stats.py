@@ -47,6 +47,13 @@ def smean(data):
     seasons = (data * weights).groupby("time.season").sum(dim="time")
     return seasons
 
+def amean(data):
+    month_length = data.time.dt.days_in_month
+    weights = (month_length.groupby("time.year") / month_length.groupby("time.year").sum())
+    np.testing.assert_allclose(weights.groupby("time.year").sum().values, np.ones(1))
+    seasons = (data * weights).groupby("time.year").sum(dim="time")
+    return seasons
+
 class data_resample(object):
     
     def __init__(self,fname,**kwargs):
@@ -106,10 +113,13 @@ class data_resample(object):
                 data = data.rename({'year':'time'})
         else:
             try:
-                data = data.resample(time="1AS",restore_coord_dims=True).mean(dim='time')
+                data = amean(data)
             except:
-                data = data.groupby('time.year').mean('time')
-                data = data.rename({'year':'time'})
+                try:
+                    data = data.resample(time="1AS",restore_coord_dims=True).mean(dim='time')
+                except:
+                    data = data.groupby('time.year').mean('time')
+                    data = data.rename({'year':'time'})
         data.name = varbl
         return data,self.freq,self.season
         
