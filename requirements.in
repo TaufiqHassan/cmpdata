@@ -1,0 +1,5 @@
+esmpy==7.1.0
+xesmf==0.3.0
+dask
+netCDF4
+scipy
