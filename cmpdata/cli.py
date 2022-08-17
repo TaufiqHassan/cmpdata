@@ -35,7 +35,7 @@ def main():
     parser.add_argument("-trend", help="Calculate variable grid-by-grid trends", action='store_true', default=None)
     parser.add_argument("-aggr", help="Calculate model aggreement", action='store_true', default=None)
     parser.add_argument("-freq", help="Temporal mean frequency: annual/daily/monthly" ,default='annual')
-    parser.add_argument("-reg", help="Select region for timeseries output" ,default='global')
+    parser.add_argument("-reg", help="Select region for timeseries output (choices: NH/SH/NH-mid/SH-mid/NH-pole/SH-pole/NA/NAT/CONUS)" ,default='global')
     parser.add_argument("-rm", help="Use the realization means", action='store_true', default=None)
     parser.add_argument("-a", help="Use cell areas for spatial mean calculations", action='store_true', default=None)
     parser.add_argument("-curve", help="Regridding to curvilinear grids", action='store_true', default=None)

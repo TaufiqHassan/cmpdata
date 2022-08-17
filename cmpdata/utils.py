@@ -182,12 +182,22 @@ def get_area(val,area):
         out=aave(val,lat_i=0).spatial_avg()
     if area=='SH':
         out=aave(val,lat_e=0).spatial_avg()
-    if area=='NA':
+    if area=='NAT':
         out=aave(val,lat_i=0,lat_e=65,lon_i=-60,lon_e=-10).spatial_avg()
     if area=='EU':
         out=aave(val,lat_i=30,lat_e=45,lon_i=0,lon_e=30).spatial_avg()
     if area=='NH-mid':
         out=aave(val,lat_i=30,lat_e=60).spatial_avg()
+    if area=='SH-mid':
+        out=aave(val,lat_i=-60,lat_e=-30).spatial_avg()
+    if area=='NH-pole':
+        out=aave(val,lat_i=60,lat_e=90).spatial_avg()
+    if area=='SH-pole':
+        out=aave(val,lat_i=-90,lat_e=-60).spatial_avg()
+    if area=='CONUS':
+        out=aave(val,lat_i=25,lat_e=49,lon_i=-125,lon_e=-67).spatial_avg()
+    if area=='NA':
+        out=aave(val,lat_i=15,lat_e=72,lon_i=-167,lon_e=-50).spatial_avg()
     if area=='SPG':
         out=aave(val,lat_i=45,lat_e=65,lon_i=-60,lon_e=-10).spatial_avg()
     if area=='azores':
