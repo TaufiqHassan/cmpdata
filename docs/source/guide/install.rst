@@ -20,11 +20,9 @@ And then activate cmpdata to use cmpdata
 
 ``conda activate cmpdata``
 
-Using alternative method will cause usrs to invoke ``cmpdata`` as ``python <cmpdata directory>/cmpdata.py``.
+Using alternative method will cause users to invoke ``cmpdata`` as ``python <cmpdata directory>/cmpdata.py``.
 
-Supports both OSX and Linux. Windows users can use `Windows Subsystem`_. Check installation with -
-
-``cmpdata -h``; which should produce the help message with all available options (shown for features available in v2.0.1) ::
+Supports both OSX and Linux. Windows users can use `Windows Subsystem`_. Check installation with ``cmpdata -h``, which should produce the help message with all available options (shown for features available in v2.0.1) ::
 
         usage: cmpdata.py [-h] -o {info,rm,mm,stats,ts} [-dir DIR] [-m M] [-e E] [-v V] [-r R] [-out OUT] [-f F] [-init INIT] [-end END] [-t] [-z] [-s S] [-mm]
         [-std] [-clim] [-anom] [-manom] [-trend] [-aggr] [-freq FREQ] [-reg REG] [-rm] [-a] [-curve] [-w] [-ci CI] [-regrid]
