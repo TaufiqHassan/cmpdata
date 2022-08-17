@@ -86,7 +86,7 @@ Usage
         -trend                Calculate variable grid-by-grid trends
         -aggr                 Calculate model aggreement
         -freq FREQ            Temporal mean frequency: annual/daily/monthly
-        -reg REG              Select region for timeseries output
+        -reg REG              Select region for timeseries output (choices: NH/SH/NH-mid/SH-mid/NH-pole/SH-pole/NA/NAT/CONUS)
         -rm                   Use the realization means
         -a                    Use cell areas for spatial mean calculations
         -curve                Regridding to curvilinear grids
