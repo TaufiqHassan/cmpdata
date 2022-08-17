@@ -1,9 +1,9 @@
 Extract data info.
 ==================
 
-To extract information of the available CMIP6 data archived in a directory. This information includes the number of variables, models, experiments, realizations, and data files available in a directory.
+To extract information of the available CMIP6 data archived in a directory use ``cmpdata -o info``. This information includes the number of variables, models, experiments, realizations, and data files available in a directory.
 
-It is a helpful feature, where users can put all their raw data in a single directory. This relieves the requirement to make directories for different variables/experiments or so on and remember them while performing pre-processing.
+It is a helpful feature where users can put all their raw data in a single directory. This relieves them from the requirement to make directories for different variables/experiments or so on and remember them while performing pre-processing.
 
 **General usage:**  ::
 
@@ -31,15 +31,15 @@ It is a helpful feature, where users can put all their raw data in a single dire
     
     Total number of files: 7801
     
-This single directory contains ~7800 CMIP6 raw fies! These are from different models and experiments. Users can pin-point on the number of data for a particular model/experiment/variable using ``-m`` or ``-e`` or ``-v`` options.
+This single directory contains ~7800 CMIP6 raw fies! These are from different models and experiments. Users can pin-point on the number of data for a particular model/experiment/variable using ``-m`` or ``-e`` or ``-v`` options (which takes comma separated multiple values).
 
 **Example usage:** ::
 
-    $ cmpdata -o info -dir /directory/path/here -m UKESM1-0-LL -e ssp370 -v rlut
+    $ cmpdata -o info -dir /directory/path/here -m UKESM1-0-LL -e ssp370 -v rlut,rsut
 
 **output** ::
 
-    Available 1 variables: ['rlut']
+    Available 2 variables: ['rlut' 'rsut']
     
     Available 1 models: ['UKESM1-0-LL']
     
@@ -47,7 +47,7 @@ This single directory contains ~7800 CMIP6 raw fies! These are from different mo
     
     Available 3 realizations: ['r1i1p1f2' 'r2i1p1f2' 'r3i1p1f2']
     
-    Total number of files: 6 
+    Total number of files: 12
     
-So, there are 3 realizations of ``rlut`` for ``'UKESM1-0-LL`` model in ``ssp370`` experiment. Total number of files is 6, meaning each realization has 2 files. So, user can decide whether he has all the files before applying pre-processing.
+So, there are 3 realizations of ``rlut`` for ``UKESM1-0-LL`` model in ``ssp370`` experiment. Total number of files is 12 (6 for each variable), meaning each realization has 2 files. So, user has omniscience of all data and can decide whether all data are available/downloaded before moving forward.
     
