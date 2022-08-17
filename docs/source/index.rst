@@ -33,10 +33,7 @@ User guide
 
    guide/quickstart
    guide/install
-   guide/search
    guide/module_search
-   guide/download
-   guide/q_and_a.rst
    guide/authors.rst
    guide/license
 

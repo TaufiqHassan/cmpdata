@@ -49,11 +49,11 @@ All usable arguments and their explanations (as of v2.0.1) - ::
     -ci CI                confidence interval used in -trend and -aggr options
     -regrid               regridding on/off
 
-Example usage 1 ::
+**Example usage 1** ::
 
     $ cmpdata -o info -dir /data/directory/here
 
-Example output 1 ::
+**Example output 1** ::
 
     <<Showing all available data>>
     
@@ -63,9 +63,9 @@ Example output 1 ::
      'rsds' 'rsdt' 'rsus' 'rsut' 'rsutcs' 'sfcWind' 'sftlf' 'siconc' 'siconca'
      'sltovgyre' 'sltovovrt' 'sos' 'sowaflup' 'sowflisf' 'tos' 'tosC' 'wfo']
     
-    Available 5 models: ['EC-Earth3-AerChem' 'GISS-E2-1-G' 'MRI-ESM2-0' 'UKESM1-0-LL' 'piControl']
+    Available 4 models: ['EC-Earth3-AerChem' 'GISS-E2-1-G' 'MRI-ESM2-0' 'UKESM1-0-LL']
     
-    Available 8 experiments: ['piControl' 'GISS-E2-1-G' 'ssp370-lowNTCF' 'ssp370-lowNTCFCH4' 'ssp370'
+    Available 7 experiments: ['piControl' 'ssp370-lowNTCF' 'ssp370-lowNTCFCH4' 'ssp370'
      'ssp370SST-lowNTCF' 'ssp370SST-lowNTCFCH4' 'ssp370SST']
     
     Available 20 realizations: ['r1i1p1f1' 'r1i1p3f1' 'r1i1p1f2' 'r1i1p5f1' 'r2i1p3f1' 'r3i1p3f1'
@@ -75,11 +75,11 @@ Example output 1 ::
     
     Total number of files: 7801
 
-Example usage 2 ::
+**Example usage 2** ::
 
     $ cmpdata -o rm -dir /data/directory/here -v rlut,rsut -e ssp370 -m UKESM1-0-LL -t -regrid on
 
-Example output 2 ::
+**Example output 2** ::
 
     For variable / model / experiment:  rlut / UKESM1-0-LL / ssp370
 
@@ -141,11 +141,11 @@ Example output 2 ::
     Finished in 5.28 second(s)
 
 
-Example usage 3 ::
+**Example usage 3** ::
 
     $ cmpdata -o mm -dir /data/directory/here -v rlut -e ssp370 -m MRI-ESM2-0,UKESM1-0-LL,GISS-E2-1-G -rm -out rlut_model_mean_output_file_2015-2020.nc -init 2015 -end 2020
 
-Example output 3 ::
+**Example output 3** ::
 
     For variable / model / experiment:  rlut / GISS-E2-1-G / ssp370
     
@@ -285,7 +285,7 @@ Example output 3 ::
     Ensemble data shape: (72, 180, 360)
     Finished in 9.55 second(s)
 
-Example usage 4 ::
+**Example usage 4** ::
 
     $ cmpdata -o stats -trend -f rlut_model_mean_output_file_2015-2020.nc -v rlut -dir /data/directory/here -init 2015 -end 2020
 

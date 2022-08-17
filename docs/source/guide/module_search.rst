@@ -1,41 +1,53 @@
-CMIP6DB module
-==============
+Extract data info.
+==================
 
-To activate **CMIP6DB** module use ``acccmip6 -o M``. This module allows all **Optinal arguments 1**. However, the input is always ``show``.
+To extract information of the available CMIP6 data archived in a directory. This information includes the number of variables, models, experiments, realizations, and data files available in a directory.
 
-This module can be used to search all currently avalable models, experiemnts, variables, frequecies and realms in the CMIP6 database. 
+It is a helpful feature, where users can put all their raw data in a single directory. This relieves the requirement to make directories for different variables/experiments or so on and remember them while performing pre-processing.
 
-**Usage:** without any arguments ::
+**General usage:**  ::
 
-        acccmip6 -o M
-
-**output** ::
-
-        <<You are using the CMIP6DB module now>>
-
-        Use 'show' as the -m/-e/-f/-v/-r argument option instead of the names
-
-        Example: acccmip -o M -m show >>> will generate a list of all currently available models in the CMIP6 database.
-
-**Usage:** with argument ::
-
-        acccmip6 -o M -m show
+        $ cmpdata -o info -dir /directory/path/here
 
 **output** ::
 
-        <<You are using the CMIP6DB module now>>
+    <<Showing all available data>>
+    
+    
+    Available 34 variables: ['areacella' 'areacello' 'clt' 'evs' 'evspsbl' 'fsitherm' 'hfbasin' 'hfds'
+     'mlotst' 'msftmz' 'msftyz' 'pr' 'psl' 'rlds' 'rlus' 'rlut' 'rlutcs'
+     'rsds' 'rsdt' 'rsus' 'rsut' 'rsutcs' 'sfcWind' 'sftlf' 'siconc' 'siconca'
+     'sltovgyre' 'sltovovrt' 'sos' 'sowaflup' 'sowflisf' 'tos' 'tosC' 'wfo']
+    
+    Available 4 models: ['EC-Earth3-AerChem' 'GISS-E2-1-G' 'MRI-ESM2-0' 'UKESM1-0-LL']
+    
+    Available 7 experiments: ['piControl' 'ssp370-lowNTCF' 'ssp370-lowNTCFCH4' 'ssp370'
+     'ssp370SST-lowNTCF' 'ssp370SST-lowNTCFCH4' 'ssp370SST']
+    
+    Available 20 realizations: ['r1i1p1f1' 'r1i1p3f1' 'r1i1p1f2' 'r1i1p5f1' 'r2i1p3f1' 'r3i1p3f1'
+     'r3i1p1f1' 'r5i1p1f1' 'r2i1p1f2' 'r3i1p1f2' 'r1i1p3f2' 'r1i2p1f1'
+     'r2i1p3f2' 'r3i1p3f2' 'r1i1p2f2' 'r2i1p2f2' 'r3i1p2f2' 'r2i1p5f1'
+     'r3i1p5f1' 'r2i1p1f1']
+    
+    Total number of files: 7801
+    
+This single directory contains ~7800 CMIP6 raw fies! These are from different models and experiments. Users can pin-point on the number of data for a particular model/experiment/variable using ``-m`` or ``-e`` or ``-v`` options.
 
-        Use 'show' as the -m/-e/-f/-v/-r argument option instead of the names
+**Example usage:** ::
 
-        Example: acccmip -o M -m show >>> will generate a list of all currently available models in the CMIP6 database.
+    $ cmpdata -o info -dir /directory/path/here -m UKESM1-0-LL -e ssp370 -v rlut
 
-        Currently  49  models has outputs!
+**output** ::
 
-        Available models:
-
-
-        ['AWI-CM-1-1-MR', 'BCC-CSM2-MR', 'BCC-ESM1', 'CAMS-CSM1-0', 'CESM2', 'CESM2-WACCM', 'CMCC-CM2-HR4', 'CMCC-CM2-VHR4', 'CNRM-CM6-1', 'CNRM-CM6-1-HR', 
-        'CNRM-ESM2-1', 'CanESM5', 'E3SM-1-0', 'EC-Earth3', 'EC-Earth3-Veg', 'ECMWF-IFS-HR', 'ECMWF-IFS-LR', 'FGOALS-f3-L', 'FGOALS-g3', 'FIO-ESM-2-0', 
-        'GFDL-AM4', 'GFDL-CM4', 'GFDL-CM4C192', 'GFDL-ESM4', 'GFDL-OM4p5B', 'GISS-E2-1-G', 'GISS-E2-1-G-CC', 'GISS-E2-1-H', 'HadGEM3-GC31-HM', 'HadGEM3-GC31-LL', 
-        'HadGEM3-GC31-LM', 'HadGEM3-GC31-MM', 'IITM-ESM', 'IPSL-CM6A-ATM-HR', 'IPSL-CM6A-LR', 'MCM-UA-1-0', 'MIROC-ES2L', 'MIROC6', 'MPI-ESM1-2-HR', 
-        'MRI-AGCM3-2-H', 'MRI-AGCM3-2-S', 'MRI-ESM2-0', 'NESM3', 'NICAM16-7S', 'NICAM16-8S', 'NICAM16-9S', 'NorESM2-LM', 'SAM0-UNICON', 'UKESM1-0-LL']
+    Available 1 variables: ['rlut']
+    
+    Available 1 models: ['UKESM1-0-LL']
+    
+    Available 1 experiments: ['ssp370']
+    
+    Available 3 realizations: ['r1i1p1f2' 'r2i1p1f2' 'r3i1p1f2']
+    
+    Total number of files: 6 
+    
+So, there are 3 realizations of ``rlut`` for ``'UKESM1-0-LL`` model in ``ssp370`` experiment. Total number of files is 6, meaning each realization has 2 files. So, user can decide whether he has all the files before applying pre-processing.
+    

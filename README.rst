@@ -14,6 +14,7 @@ Pre-process CMIP6 data
 ``cmpdata`` package can handle and analyze raw CMIP6 data.
 
 * GitHub repo: https://github.com/TaufiqHassan/cmpdata
+* Documentation: https://cmpdata.readthedocs.io/en/latest
 
 Features
 --------

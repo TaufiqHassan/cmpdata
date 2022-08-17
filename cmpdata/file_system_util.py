@@ -29,7 +29,7 @@ class search_dir(object):
         dpath=[]
         unknown=[]
         for file in files:
-            if ('_MM_' not in file) and ('.nc' in file):
+            if ('_MM_' not in file) and (file.endswith('.nc')):
                 try:
                     if len(file.split('_'))>4:
                         m.append(file.split('_')[2])
