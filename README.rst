@@ -96,6 +96,15 @@ Usage
         -regrid               regridding on/off
 
 
+Demo
+----
+
+All demonstrations are done using a small number of test data files, but are applicable for any number of files/models/variables/experiments and so on. 
+
+Get available CMIP6 data information in a directory with ``cmpdata -o info``.
+
+.. image:: docs/get_info.gif
+
 License
 -------
 
