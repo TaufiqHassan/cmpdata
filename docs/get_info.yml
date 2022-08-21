@@ -1,0 +1,233 @@
+# The configurations that used for the recording, feel free to edit them
+config:
+
+  # Specify a command to be executed
+  # like `/bin/bash -l`, `ls`, or any other commands
+  # the default is bash for Linux
+  # or powershell.exe for Windows
+  command: bash -l
+  
+  # Specify the current working directory path
+  # the default is the current working directory path
+  cwd: /home/Taufiq/cmpdata_demo/example_CMIP6_data
+  
+  # Export additional ENV variables
+  env:
+    recording: true
+  
+  # Explicitly set the number of columns
+  # or use `auto` to take the current
+  # number of columns of your shell
+  cols: 124
+  
+  # Explicitly set the number of rows
+  # or use `auto` to take the current
+  # number of rows of your shell
+  rows: 41
+  
+  # Amount of times to repeat GIF
+  # If value is -1, play once
+  # If value is 0, loop indefinitely
+  # If value is a positive number, loop n times
+  repeat: 0
+  
+  # Quality
+  # 1 - 100
+  quality: 100
+  
+  # Delay between frames in ms
+  # If the value is `auto` use the actual recording delays
+  frameDelay: auto
+  
+  # Maximum delay between frames in ms
+  # Ignored if the `frameDelay` isn't set to `auto`
+  # Set to `auto` to prevent limiting the max idle time
+  maxIdleTime: 2000
+  
+  # The surrounding frame box
+  # The `type` can be null, window, floating, or solid`
+  # To hide the title use the value null
+  # Don't forget to add a backgroundColor style with a null as type
+  frameBox:
+    type: floating
+    title: null
+    style:
+      border: 0px black solid
+      # boxShadow: none
+      # margin: 0px
+  
+  # Add a watermark image to the rendered gif
+  # You need to specify an absolute path for
+  # the image on your machine or a URL, and you can also
+  # add your own CSS styles
+  watermark:
+    imagePath: null
+    style:
+      position: absolute
+      right: 15px
+      bottom: 15px
+      width: 100px
+      opacity: 0.9
+  
+  # Cursor style can be one of
+  # `block`, `underline`, or `bar`
+  cursorStyle: block
+  
+  # Font family
+  # You can use any font that is installed on your machine
+  # in CSS-like syntax
+  fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
+  
+  # The size of the font
+  fontSize: 14
+  
+  # The height of lines
+  lineHeight: 1
+  
+  # The spacing between letters
+  letterSpacing: 0
+  
+  # Theme
+  theme:
+    background: "transparent"
+    foreground: "#afafaf"
+    cursor: "#c7c7c7"
+    black: "#232628"
+    red: "#fc4384"
+    green: "#b3e33b"
+    yellow: "#ffa727"
+    blue: "#75dff2"
+    magenta: "#ae89fe"
+    cyan: "#708387"
+    white: "#d5d5d0"
+    brightBlack: "#626566"
+    brightRed: "#ff7fac"
+    brightGreen: "#c8ed71"
+    brightYellow: "#ebdf86"
+    brightBlue: "#75dff2"
+    brightMagenta: "#ae89fe"
+    brightCyan: "#b1c6ca"
+    brightWhite: "#f9f9f4"
+  
+# Records, feel free to edit them
+records:
+  - delay: 1074
+    content: "\e]0;Taufiq@localhost:~/cmpdata_demo/example_CMIP6_data\a\e[?1034h(base) \e[32;1mTaufiq@\e[0m\e[30;47mlocalhost\e[0m:\e[34;1m~/cmpdata_demo/example_CMIP6_data\e[0m$ "
+  - delay: 1058
+    content: c
+  - delay: 120
+    content: m
+  - delay: 256
+    content: p
+  - delay: 128
+    content: d
+  - delay: 64
+    content: a
+  - delay: 160
+    content: t
+  - delay: 64
+    content: a
+  - delay: 120
+    content: ' '
+  - delay: 128
+    content: '-'
+  - delay: 280
+    content: h
+  - delay: 157
+    content: "\r\n"
+  - delay: 1718
+    content: "usage: cmpdata [-h] -o {info,rm,mm,stats,ts} [-dir DIR] [-m M] [-e E] [-v V]\r\n               [-r R] [-out OUT] [-f F] [-init INIT] [-end END] [-t] [-z]\r\n               [-s S] [-mm] [-std] [-clim] [-anom] [-manom] [-trend] [-aggr]\r\n               [-freq FREQ] [-reg REG] [-rm] [-a] [-curve] [-w] [-ci CI]\r\n               [-regrid]\r\n\r\noptional arguments:\r\n  -h, --help            show this help message and exit\r\n  -o {info,rm,mm,stats,ts}, --output-options {info,rm,mm,stats,ts}\r\n                        Select an output option\r\n  -dir DIR              Select directory.\r\n  -m M                  Model names\r\n  -e E                  Experiment names\r\n  -v V                  Variable names\r\n  -r R                  Realization\r\n  -out OUT              Output file name\r\n  -f F                  Input filenames for stats\r\n  -init INIT            Initial year\r\n  -end END              Ending year\r\n  -t                    Temporal mean option\r\n  -z                    Zonal mean option\r\n  -s S                  Seasonal mean option\r\n  -mm                   Calculate model ensemble mean\r\n  -std                  Calculate model std\r\n  -clim                 Calculate monthly climatology\r\n  -anom                 Calculate monthly anomaly\r\n  -manom                Calculate model anomaly\r\n  -trend                Calculate variable grid-by-grid trends\r\n  -aggr                 Calculate model aggreement\r\n  -freq FREQ            Temporal mean frequency: annual/daily/monthly\r\n  -reg REG              Select region for timeseries output\r\n  -rm                   Use the realization means\r\n  -a                    Use cell areas for spatial mean calculations\r\n  -curve                Regridding to curvilinear grids\r\n  -w                    All model means as ens dim (used by -std, -mm, -aggr\r\n                        stats options)\r\n  -ci CI                confidence interval used in -trend and -aggr options\r\n  -regrid               regridding on/off\r\nTry: cmpdata -h\r\n"
+  - delay: 225
+    content: "\e]0;Taufiq@localhost:~/cmpdata_demo/example_CMIP6_data\a(base) \e[32;1mTaufiq@\e[0m\e[30;47mlocalhost\e[0m:\e[34;1m~/cmpdata_demo/example_CMIP6_data\e[0m$ "
+  - delay: 2556
+    content: "\e[H\e[2J(base) \e[32;1mTaufiq@\e[0m\e[30;47mlocalhost\e[0m:\e[34;1m~/cmpdata_demo/example_CMIP6_data\e[0m$ "
+  - delay: 640
+    content: l
+  - delay: 81
+    content: s
+  - delay: 151
+    content: "\r\nrlut_Amon_MRI-ESM2-0_ssp370_r1i1p1f1_gn_201501-210012.nc\r\nrlut_Amon_MRI-ESM2-0_ssp370_r3i1p1f1_gn_201501-210012.nc\r\nrlut_Amon_MRI-ESM2-0_ssp370_r5i1p1f1_gn_201501-210012_annual.nc\r\nrlut_Amon_MRI-ESM2-0_ssp370_r5i1p1f1_gn_201501-210012_modAnom.nc\r\nrlut_Amon_MRI-ESM2-0_ssp370_r5i1p1f1_gn_201501-210012_monClim.nc\r\nrlut_Amon_MRI-ESM2-0_ssp370_r5i1p1f1_gn_201501-210012.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370-lowNTCFCH4_r1i1p1f2_gn_201501-204912.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370-lowNTCFCH4_r1i1p1f2_gn_205001-210012.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370-lowNTCFCH4_r2i1p1f2_gn_201501-204912.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370-lowNTCFCH4_r2i1p1f2_gn_205001-210012.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370-lowNTCFCH4_r3i1p1f2_gn_201501-204912.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370-lowNTCFCH4_r3i1p1f2_gn_205001-210012.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370_r1i1p1f2_gn_201501-204912.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370_r1i1p1f2_gn_205001-210012.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370_r2i1p1f2_gn_201501-204912.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370_r2i1p1f2_gn_205001-210012.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370_r3i1p1f2_gn_201501-204912.nc\r\nrlut_Amon_UKESM1-0-LL_ssp370_r3i1p1f2_gn_205001-210012.nc\r\nrsut_Amon_MRI-ESM2-0_ssp370_r1i1p1f1_gn_201501-210012.nc\r\nrsut_Amon_MRI-ESM2-0_ssp370_r3i1p1f1_gn_201501-210012.nc\r\nrsut_Amon_MRI-ESM2-0_ssp370_r5i1p1f1_gn_201501-210012.nc\r\nrsut_Amon_UKESM1-0-LL_ssp370_r1i1p1f2_gn_201501-204912.nc\r\nrsut_Amon_UKESM1-0-LL_ssp370_r1i1p1f2_gn_205001-210012.nc\r\nrsut_Amon_UKESM1-0-LL_ssp370_r2i1p1f2_gn_201501-204912.nc\r\nrsut_Amon_UKESM1-0-LL_ssp370_r2i1p1f2_gn_205001-210012.nc\r\nrsut_Amon_UKESM1-0-LL_ssp370_r3i1p1f2_gn_201501-204912.nc\r\nrsut_Amon_UKESM1-0-LL_ssp370_r3i1p1f2_gn_205001-210012.nc\r\n\e]0;Taufiq@localhost:~/cmpdata_demo/example_CMIP6_data\a(base) \e[32;1mTaufiq@\e[0m\e[30;47mlocalhost\e[0m:\e[34;1m~/cmpdata_demo/example_CMIP6_data\e[0m$ "
+  - delay: 3814
+    content: c
+  - delay: 120
+    content: m
+  - delay: 120
+    content: p
+  - delay: 74
+    content: d
+  - delay: 70
+    content: a
+  - delay: 112
+    content: t
+  - delay: 96
+    content: a
+  - delay: 200
+    content: ' '
+  - delay: 147
+    content: '-'
+  - delay: 150
+    content: o
+  - delay: 104
+    content: ' '
+  - delay: 120
+    content: i
+  - delay: 120
+    content: 'n'
+  - delay: 152
+    content: f
+  - delay: 200
+    content: o
+  - delay: 200
+    content: ' '
+  - delay: 200
+    content: '-'
+  - delay: 200
+    content: d
+  - delay: 127
+    content: i
+  - delay: 143
+    content: r
+  - delay: 200
+    content: ' '
+  - delay: 200
+    content: '~'
+  - delay: 200
+    content: /
+  - delay: 177
+    content: c
+  - delay: 120
+    content: m
+  - delay: 173
+    content: pdata_demo/
+  - delay: 200
+    content: e
+  - delay: 184
+    content: x
+  - delay: 141
+    content: ample_CMIP6_data/
+  - delay: 675
+    content: "\r\n"
+  - delay: 853
+    content: "\r\n<<Showing all available data>>\r\n\r\n\e[92m\r\nAvailable 2 variables:\e[0m ['rlut' 'rsut']\r\n\e[92m\r\nAvailable 2 models:\e[0m ['MRI-ESM2-0' 'UKESM1-0-LL']\r\n\e[92m\r\nAvailable 2 experiments:\e[0m ['ssp370' 'ssp370-lowNTCFCH4']\r\n\e[92m\r\nAvailable 6 realizations:\e[0m ['r1i1p1f1' 'r3i1p1f1' 'r5i1p1f1' 'r1i1p1f2' 'r2i1p1f2' 'r3i1p1f2']\r\n\e[92m\r\nTotal number of files:\e[0m 27 \r\n\r\n\r\nFinished in 0.01 second(s)\r\n"
+  - delay: 120
+    content: "\e]0;Taufiq@localhost:~/cmpdata_demo/example_CMIP6_data\a(base) \e[32;1mTaufiq@\e[0m\e[30;47mlocalhost\e[0m:\e[34;1m~/cmpdata_demo/example_CMIP6_data\e[0m$ "
+  - delay: 4992
+    content: cmpdata -o info -dir ~/cmpdata_demo/example_CMIP6_data/
+  - delay: 811
+    content: ' '
+  - delay: 168
+    content: '-'
+  - delay: 224
+    content: m
+  - delay: 128
+    content: ' '
+  - delay: 250
+    content: "UKESM1 \r-0-LL"
+  - delay: 672
+    content: "\r\n"
+  - delay: 1510
+    content: "\e[92m\r\nAvailable 2 variables:\e[0m ['rlut' 'rsut']\r\n\e[92m\r\nAvailable 1 models:\e[0m ['UKESM1-0-LL']\r\n\e[92m\r\nAvailable 2 experiments:\e[0m ['ssp370-lowNTCFCH4' 'ssp370']\r\n\e[92m\r\nAvailable 3 realizations:\e[0m ['r1i1p1f2' 'r2i1p1f2' 'r3i1p1f2']\r\n\e[92m\r\nTotal number of files:\e[0m 18 \r\n\r\n\r\nFinished in 0.02 second(s)\r\n"
+  - delay: 232
+    content: "\e]0;Taufiq@localhost:~/cmpdata_demo/example_CMIP6_data\a(base) \e[32;1mTaufiq@\e[0m\e[30;47mlocalhost\e[0m:\e[34;1m~/cmpdata_demo/example_CMIP6_data\e[0m$ "
+  - delay: 1961
+    content: "logout\r\n"
